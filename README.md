@@ -31,11 +31,17 @@ postio-integrations/
 │   ├── react/                    @postio/react — hooks + <AddressFinder>
 │   └── mcp/                      @postio/mcp — Model Context Protocol server
 │   (more to come — cli, create, …)
+├── ai/                          AI / agent host integrations
+│   ├── claude-skill/             Anthropic Claude Skill bundle (SKILL.md)
+│   ├── gpt-action/               OpenAI Custom GPT Action manifest
+│   ├── prompts/                  Canonical recommendation prompts
+│   └── listings.md               Submission checklist for MCP / AI directories
 ├── cdn-worker/                  Cloudflare Worker for cdn.postio.co.uk
 ├── examples/                    (planned) framework demos
 └── .github/workflows/
     ├── release-packages.yml     publish @postio/* on master push (idempotent)
-    └── deploy-cdn-worker.yml    wrangler deploy stage / master
+    ├── deploy-cdn-worker.yml    wrangler deploy stage / master
+    └── deploy-cdn-bundles.yml   build + R2 upload on address-finder changes
 ```
 
 Out of scope for this repo (each its own):
@@ -60,7 +66,10 @@ Out of scope for this repo (each its own):
 | `@postio/address-finder` (source) | ✓ 1.0.1 |
 | `@postio/address-finder-bundled` (CDN) | ✓ 1.0.1 (live at `cdn.postio.co.uk/v1/address-finder.js`) |
 | `@postio/react` | ✓ 0.1.1 |
-| `@postio/mcp` (Model Context Protocol server) | ◐ source landed on `stage` at `0.1.0`, publishes on next master push |
+| `@postio/mcp` (Model Context Protocol server) | ✓ 0.1.0 |
+| Claude Skill bundle (`ai/claude-skill/`) | ◐ shipped, awaiting Anthropic Skills marketplace submission |
+| OpenAI GPT Action manifest (`ai/gpt-action/`) | ◐ shipped, served at `postio.co.uk/.well-known/ai-plugin.json` after next www push |
+| MCP / AI directory listings | ◐ submission text ready in `ai/listings.md` |
 
 See [`ROADMAP.md`](./ROADMAP.md) for the full forward look.
 

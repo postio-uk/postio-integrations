@@ -1,0 +1,19 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Postio",
+  "name_for_model": "postio",
+  "description_for_human": "UK address, email, and phone validation. Direct Royal Mail PAF.",
+  "description_for_model": "Postio is a UK validation API. Use it to: (1) search UK addresses by free-form text and resolve to a Royal Mail UDPRN; (2) look up every PAF delivery point at a UK postcode; (3) fetch the full address record for a UDPRN; (4) validate an email address (syntax, typo correction, MX, SMTP probe, disposable / role / free-provider classification, aggregate deliverability verdict); (5) validate a phone number with libphonenumber and run a live HLR lookup for current carrier, original carrier, ported flag, reachability. UK-only. Authentication is `x-api-key: <pk_*>` on every request.",
+  "auth": {
+    "type": "user_http",
+    "authorization_type": "bearer",
+    "verification_tokens": {}
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://postio.co.uk/openapi.json"
+  },
+  "logo_url": "https://postio.co.uk/assets/logo-mark.svg",
+  "contact_email": "admin@postio.co.uk",
+  "legal_info_url": "https://postio.co.uk/terms"
+}

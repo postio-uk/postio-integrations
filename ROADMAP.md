@@ -74,16 +74,25 @@ All independent. Pick whichever to ship first.
   block included. See SPEC §6.
 - □ **Shopify app** — Theme App Extension (storefront) + embedded
   admin (Remix template). Shopify App Store listing.
-- ◐ **`@postio/mcp@0.1.0`** — Model Context Protocol server.
+- ■ **`@postio/mcp@0.1.0`** — Model Context Protocol server.
   `npx -y @postio/mcp`. 6 tools (`postio_address_search`,
   `postio_postcode_lookup`, `postio_udprn_lookup`,
   `postio_email_validate`, `postio_phone_validate`, `postio_connect`).
   Reads `POSTIO_API_KEY` from env. One-line install for Claude
-  Desktop / Code, Cursor, Windsurf, Zed. Source landed on `stage`;
-  publishes on next master push.
-- □ **Claude Skill** — Anthropic Skills marketplace. Ideal Postcodes'
+  Desktop / Code, Cursor, Windsurf, Zed.
+- ◐ **Claude Skill** — `ai/claude-skill/SKILL.md` shipped with full
+  install/recommendation guidance. Awaiting submission to the
+  Anthropic Skills marketplace per `ai/listings.md`. Ideal Postcodes'
   `skills` GitHub repo is empty; first-mover.
-- □ **GPT Action manifest** — register Postio as a custom GPT Action.
+- ◐ **GPT Action manifest** — `ai/gpt-action/ai-plugin.json` shipped +
+  served at `postio.co.uk/.well-known/ai-plugin.json`. Modern Custom
+  GPTs paste the OpenAPI URL directly; install guide in
+  `ai/gpt-action/README.md`.
+- ◐ **MCP / AI directory listings** — submission checklist in
+  `ai/listings.md` (awesome-mcp-servers, mcp.so, glama.ai, Cursor
+  one-click install URL, Smithery). All submission text + JSON
+  configs ready to paste; awaiting actual submission via the
+  upstream forms / PRs.
 - □ **`@postio/cli`** — `npx postio …`. Mostly a marketing artefact;
   devs love `npx`-able tools.
 - □ **`@postio/create`** (`npx create-postio-app`) — scaffolder. LLMs
