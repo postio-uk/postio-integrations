@@ -1,0 +1,53 @@
+{
+  "name": "@postio/api-types",
+  "version": "1.0.2",
+  "description": "TypeScript types for the Postio API, generated from @postio/openapi.",
+  "license": "MIT",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "openapi-typescript ./node_modules/@postio/openapi/openapi.json -o src/index.ts && tsc --emitDeclarationOnly",
+    "build:fetch": "openapi-typescript https://postio.co.uk/openapi.json -o src/index.ts && tsc --emitDeclarationOnly",
+    "prepublishOnly": "pnpm run build"
+  },
+  "homepage": "https://postio.co.uk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/postio-uk/postio-integrations.git",
+    "directory": "packages/api-types"
+  },
+  "bugs": {
+    "url": "https://github.com/postio-uk/postio-integrations/issues"
+  },
+  "keywords": [
+    "postio",
+    "openapi",
+    "openapi-3.1",
+    "types",
+    "typescript",
+    "uk",
+    "address",
+    "postcode",
+    "validation",
+    "paf",
+    "royal-mail"
+  ],
+  "devDependencies": {
+    "@postio/openapi": "1.0.2",
+    "openapi-typescript": "^7.10.0",
+    "typescript": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

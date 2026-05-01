@@ -1,0 +1,31 @@
+name = "postio-cdn"
+main = "src/index.js"
+compatibility_date = "2026-04-30"
+workers_dev = false
+
+# Prod route — bound by `wrangler deploy` (no --env flag = prod, per the
+# postio-api convention). Uncomment after the R2 bucket is created and
+# DNS is verified.
+# routes = [
+#   { pattern = "cdn.postio.co.uk/*", zone_name = "postio.co.uk" }
+# ]
+
+# [[r2_buckets]]
+# binding = "BUNDLES"
+# bucket_name = "postio-cdn-bundles"
+
+# Stage variant — for early validation. DNS for stage-cdn.postio.co.uk
+# needs adding (CNAME → postio.co.uk, orange-cloud) before the route
+# can bind.
+[env.stage]
+name = "postio-cdn-stage"
+# routes = [
+#   { pattern = "stage-cdn.postio.co.uk/*", zone_name = "postio.co.uk" }
+# ]
+
+# [[env.stage.r2_buckets]]
+# binding = "BUNDLES"
+# bucket_name = "postio-cdn-bundles-stage"
+
+[observability]
+enabled = true

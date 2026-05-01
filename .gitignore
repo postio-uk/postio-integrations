@@ -1,0 +1,22 @@
+node_modules
+.pnpm-store
+.wrangler
+
+# Generated artefacts
+dist
+build
+*.tsbuildinfo
+packages/api-types/src/index.ts
+
+# Local env
+.env
+.env.*
+.dev.vars
+
+# OS / editor
+.DS_Store
+.idea
+.vscode
+
+# Logs
+*.log

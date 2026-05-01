@@ -1,0 +1,45 @@
+name: Deploy cdn-worker
+
+# Deploys the cdn.postio.co.uk Worker on stage (push to stage) or prod
+# (push to master). Skipped when the cdn-worker tree didn't change.
+
+on:
+  push:
+    branches: [stage, master]
+    paths:
+      - 'cdn-worker/**'
+      - '.github/workflows/deploy-cdn-worker.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cdn-worker
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: cdn-worker/package-lock.json
+
+      - run: npm ci
+
+      - name: Deploy to stage
+        if: github.ref == 'refs/heads/stage'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+        run: npx wrangler deploy --env stage
+
+      - name: Deploy to prod
+        if: github.ref == 'refs/heads/master'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+        run: npx wrangler deploy

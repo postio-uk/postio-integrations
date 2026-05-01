@@ -1,0 +1,72 @@
+name: Publish @postio/* npm packages
+
+# Walks every package under packages/* on master push (or workflow_dispatch),
+# builds it, and publishes any whose version isn't already on npm.
+# Idempotent — same version twice is a no-op.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - 'packages/**'
+      - '.github/workflows/release-packages.yml'
+
+permissions:
+  contents: read
+  id-token: write  # for npm provenance once postio-uk repos go public
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
+          cache-dependency-path: packages/pnpm-lock.yaml
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm -r run build
+
+      - name: Walk packages and publish if version is new
+        shell: bash
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -e
+          for pkg_dir in */; do
+            pkg_dir="${pkg_dir%/}"
+            [ -f "$pkg_dir/package.json" ] || continue
+
+            name=$(node -p "require('./$pkg_dir/package.json').name")
+            version=$(node -p "require('./$pkg_dir/package.json').version")
+            private=$(node -p "require('./$pkg_dir/package.json').private === true")
+
+            if [ "$private" = "true" ]; then
+              echo "::notice ::skipping $name@$version (private)"
+              continue
+            fi
+
+            if npm view "$name@$version" version > /dev/null 2>&1; then
+              echo "::notice ::$name@$version already on npm — skipping"
+              continue
+            fi
+
+            echo "::notice ::publishing $name@$version"
+            cd "$pkg_dir"
+            npm publish --access public
+            cd ..
+          done
