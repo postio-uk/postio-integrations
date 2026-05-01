@@ -35,8 +35,8 @@ jobs:
           console.log("Postio CDN is live");
           EOF
       - name: Upload to v1/hello.js (floating)
-        run: npx wrangler r2 object put postio-cdn-bundles/v1/hello.js --file=/tmp/hello.js --content-type="application/javascript; charset=utf-8"
+        run: npx wrangler r2 object put postio-cdn-bundles/v1/hello.js --remote --file=/tmp/hello.js --content-type="application/javascript; charset=utf-8"
       - name: Upload to v1.0.0/hello.js (immutable)
-        run: npx wrangler r2 object put postio-cdn-bundles/v1.0.0/hello.js --file=/tmp/hello.js --content-type="application/javascript; charset=utf-8"
+        run: npx wrangler r2 object put postio-cdn-bundles/v1.0.0/hello.js --remote --file=/tmp/hello.js --content-type="application/javascript; charset=utf-8"
       - name: List objects in bucket
         run: npx wrangler r2 bucket info postio-cdn-bundles || true
