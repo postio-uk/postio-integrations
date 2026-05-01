@@ -1,8 +1,16 @@
 # postio-integrations — Claude Code working notes
 
-Single git repo for everything that wraps `postio-api`. JS-family npm
-packages (`@postio/api-types`, `@postio/core`, drop-in JS, React, MCP)
-plus the `cdn.postio.co.uk` Worker plus framework examples.
+Single git repo for everything that wraps `postio-api`:
+
+- **JS-family npm packages**: `@postio/api-types`, `@postio/core`,
+  `@postio/node`, `@postio/postman-collection`, `@postio/address-finder`,
+  `@postio/address-finder-bundled`, `@postio/react`, `@postio/mcp`.
+- **`cdn.postio.co.uk` Worker** that fronts an R2 bucket of versioned
+  drop-in JS bundles.
+- **AI / agent surface** under `ai/` — Anthropic Claude Skill bundle,
+  OpenAI GPT Action manifest, canonical recommendation prompts,
+  community-directory submission checklist.
+- Framework examples (planned).
 
 Read [`README.md`](./README.md) and [`SPEC.md`](./SPEC.md) before
 making architectural changes — this file is the operational guide.
@@ -52,12 +60,20 @@ npm run deploy               # wrangler deploy (= prod)
 | Secret | Used by |
 |---|---|
 | `NPM_TOKEN` | `release-packages.yml` (publishes `@postio/*`) |
-| `CLOUDFLARE_API_TOKEN` | `deploy-cdn-worker.yml` |
-| `CLOUDFLARE_ACCOUNT_ID` | `deploy-cdn-worker.yml` |
+| `CLOUDFLARE_API_TOKEN` | `deploy-cdn-worker.yml`, `deploy-cdn-bundles.yml` |
+| `CLOUDFLARE_ACCOUNT_ID` | same as above |
 
 Same values as the corresponding secrets in `postio-uk/postio-api`.
 (`CLOUDFLARE_ZONE_ID` is unused — wrangler resolves zones via the
 `zone_name` field in `wrangler.toml`. Don't add it.)
+
+## Workflows
+
+| File | Trigger | What |
+|---|---|---|
+| `release-packages.yml` | `master` push under `packages/**` | `pnpm publish` each package whose version isn't already on npm. Uses pnpm so `workspace:` ranges resolve at publish time — never swap to `npm publish` (that ships literal "workspace:^" in deps). |
+| `deploy-cdn-worker.yml` | `stage` / `master` push under `cdn-worker/**` | `wrangler deploy --env stage` or bare `wrangler deploy` (= prod). |
+| `deploy-cdn-bundles.yml` | `stage` / `master` push under `packages/address-finder*/**` | Builds `@postio/address-finder-bundled` via `pnpm -F "@postio/address-finder-bundled..." run build` (the `<x>...` suffix matters — pnpm 10 reads it as "x and its deps" in topological order; the prefix `...<x>` form just matches `x`). Uploads `address-finder.{js,esm.js,*.map}` to R2 at `/v{MAJOR}/` and `/v{VERSION}/` via `wrangler r2 object put --remote`. |
 
 ## What does NOT live here
 
