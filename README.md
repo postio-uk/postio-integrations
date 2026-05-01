@@ -1,74 +1,62 @@
 # postio-integrations
 
-The integration layer that sits above `postio-api`. Everything here is a
-distribution surface — drop-in JS, server SDKs, platform plugins, AI/agent
-hooks — that turns the raw HTTPS API into something a developer or a
-WordPress admin can install in five minutes.
+Single git repo for everything that wraps the Postio API: typed JS
+clients, drop-in widgets, MCP server, framework examples, and the
+`cdn.postio.co.uk` Worker.
 
-This directory is the umbrella. Most sub-folders end up as their own git
-repo when they ship (separate publish targets: npm, PyPI, Packagist,
-NuGet, WP.org SVN, Shopify CLI, Marketplace listings).
+The OpenAPI spec itself lives in
+[`postio-uk/postio-api`](https://github.com/postio-uk/postio-api) and
+is published as
+[`@postio/openapi`](https://www.npmjs.com/package/@postio/openapi) +
+served at <https://postio.co.uk/openapi.json>. Everything in **this**
+repo consumes that spec.
 
 ## Where to look
 
-- [`SPEC.md`](./SPEC.md) — master spec. Architecture, taxonomy,
-  naming, CDN/distribution decisions, foundation contracts, AI strategy.
-  **Read this before starting any integration work.**
-- [`ROADMAP.md`](./ROADMAP.md) — prioritised hit list and build order.
-  Phase 0 → Phase 6, with deferrals. Optimised for **users acquired**,
-  not revenue or platform diversity.
-- Per-integration folders (added as they ship) — each gets its own
-  `README.md`, `CLAUDE.md`, and deploy/publish runbook.
+- [`SPEC.md`](./SPEC.md) — architecture, taxonomy, naming, AI strategy, conventions.
+- [`ROADMAP.md`](./ROADMAP.md) — what's shipped, what's next, what's deferred.
+- [`CLAUDE.md`](./CLAUDE.md) — operational notes for agents working in this repo.
 
-## Top-level layout
+## Layout
 
 ```
 postio-integrations/
-├── SPEC.md           ← architecture + decisions
-├── ROADMAP.md        ← prioritised build order
-├── packages/         ← JS-family monorepo (drop-in, npm core, React, MCP, CLI, OpenAPI tooling)
-├── sdks/             ← server SDKs (Python, PHP, .NET, Go, Ruby) — one repo each
-├── platforms/        ← platform plugins/apps grouped by category
-│   ├── ecomm/        ← Shopify, Magento, BigCommerce, Shopware, …
-│   ├── wordpress/    ← single unified WP plugin (covers WooCommerce + form builders)
-│   ├── nocode/       ← Webflow, Wix, Squarespace, Framer, …
-│   ├── crm/          ← HubSpot, Salesforce, Dynamics, Pipedrive, Zoho
-│   ├── workflow/     ← Zapier, Make, n8n
-│   └── browser-extension/
-├── ai/               ← llms.txt, Claude Skill, GPT Action, Cursor rules, prompt canon
-└── examples/         ← framework-by-framework demos (Next, Vite, Astro, Remix, …)
+├── packages/                    pnpm workspace; one publishable npm pkg per subdir
+│   └── api-types/               @postio/api-types — TS types from the spec
+│   (more to come — core, react, address-finder, mcp, cli, …)
+├── cdn-worker/                  Cloudflare Worker for cdn.postio.co.uk
+├── examples/                    (planned) framework demos
+└── .github/workflows/
+    ├── release-packages.yml     publish @postio/* on master push (idempotent)
+    └── deploy-cdn-worker.yml    wrangler deploy stage / master
 ```
 
-The grouping in `platforms/` is the **taxonomy** — it maps to how
-customers and search engines categorise these things, not to internal
-build similarity.
+Out of scope for this repo (each its own):
 
-## Relationship to other repos
-
-- `postio-api` — the HTTP surface every integration here wraps. The
-  OpenAPI spec **is generated and published from there** (Zod schemas
-  → `hono-openapi` → `@postio/openapi` on npm + `postio.co.uk/openapi.{json,yaml}`).
-  See SPEC §4.1.
-- `postio-www` — hosts marketing pages and `/docs/*` for each integration.
-  The `.md`-suffixed mirror of every doc page (an AI-discoverability
-  requirement, see `ai/` and `SPEC.md` §AI Surface) is generated from
-  `postio-www` content, not duplicated here. `postio-www` also serves
-  the public OpenAPI URL.
-- `postio-pipeline` / `postio-paf-bulk` / `postio-perf` — not relevant to
-  the integration layer.
+- **`postio-uk/postio-api`** — the API itself + the OpenAPI spec source.
+- **`postio-uk/postio-www`** — marketing site, customer dashboard, public OpenAPI URL, AI-discoverability surface.
+- Server SDKs in non-JS languages (Python / PHP / .NET / Go / Ruby) — separate repos when they ship.
+- Per-platform plugins (WordPress / Shopify / Magento / …) — separate repos when they ship.
 
 ## Status
 
-| Phase | Item | Status |
-|---|---|---|
-| 0 | OpenAPI spec public (postio.co.uk/openapi.{json,yaml}) | ✓ live |
-| 0 | `@postio/openapi` on npm | ✓ 1.0.1 published; **1.0.2 fix queued on `postio-api` stage** |
-| 0 | `llms.txt`, `claude.md`, `cursor.md`, `.cursorrules` in postio-www | ✓ on stage; pending master merge |
-| 0 | `@postio/api-types` (TS types from the spec) | ✓ built locally + dry-run-verified; pending publish (needs npm_token wired and `@postio/openapi@1.0.2` on npm) |
-| 0 | `cdn.postio.co.uk` Worker | ✓ scaffolded (Worker code + wrangler.toml); pending R2 bucket + DNS verify + deploy |
-| 0 | `@postio/core` (runtime client) | not started |
-| 0 | Drop-in JS (`@postio/address-finder`) | not started — depends on `core` + cdn |
-| 0 | `@postio/react`, `@postio/node`, examples gallery | not started |
-| 1 | WordPress plugin, Shopify app, MCP server, Claude Skill, … | not started |
+| Item | Status |
+|---|---|
+| `@postio/openapi` on npm | ✓ 1.0.2 |
+| `postio.co.uk/openapi.{json,yaml}` | ✓ live, 15 schemas |
+| `postio.co.uk/llms.txt` + `claude.md` + `cursor.md` + `.cursorrules` | ✓ live |
+| `@postio/api-types` on npm | ✓ 1.0.2 |
+| `cdn.postio.co.uk` + `stage-cdn.postio.co.uk` Workers | ✓ live (placeholder; R2 pending) |
+| `@postio/core` runtime client | next |
+| Drop-in JS `@postio/address-finder` | depends on `core` + R2 |
 
-See [`MORNING.md`](./MORNING.md) for the actionable checklist when you're back at the keyboard. `ROADMAP.md` has the full build order; `SPEC.md` has the contracts.
+See [`ROADMAP.md`](./ROADMAP.md) for the full forward look.
+
+## Conventions
+
+- Node 22+, pnpm 10+, ESM only, MIT-licensed.
+- `stage` is the working branch on every repo; `master` deploys / publishes.
+- Versions track release artefacts lockstep where possible — e.g.
+  `@postio/api-types@1.0.2` regenerates against `@postio/openapi@1.0.2`.
+- All deploys / publishes are CI-driven (no `npm login` locally,
+  no `wrangler login` locally — secrets live in GH Actions).

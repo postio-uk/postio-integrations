@@ -263,23 +263,23 @@ No public surface on `api.postio.co.uk`. No `openapi.postio.co.uk`
 subdomain. No R2 bucket. The marketing host is the canonical public
 URL; npm is the canonical package.
 
-**`postio-integrations/packages/openapi/` (this repo) is codegen-only**:
+**Codegen lives in `postio-integrations/packages/`** (this repo). No
+spec authoring here — packages depend on `@postio/openapi` from npm
+and run their own generators:
 
-  - No spec authoring. Reads from the npm `@postio/openapi` package or
-    `postio.co.uk/openapi.json`.
-  - Will generate and publish:
-    - `@postio/api-types` (TypeScript types, via
-      `openapi-typescript`).
-    - `@postio/postman-collection` (via
-      `openapi-to-postmanv2`).
-    - Skeleton inputs for each server-SDK repo (consumed by the SDK
-      repos' own codegen pipelines, not committed here).
+- `packages/api-types/` → `@postio/api-types` (TS types via
+  `openapi-typescript`). ✓ shipped.
+- Future: `packages/postman-collection/` → `@postio/postman-collection`
+  (via `openapi-to-postmanv2`).
+- Future: skeleton inputs for each server-SDK repo (consumed by the
+  SDK repos' own codegen pipelines, not committed here).
 
-**Versioning**: spec version is always equal to `OPENAPI_DOCUMENTATION.info.version`
-in `postio-api/api/lib/openApiDocumentation.js` (currently 1.0.1).
+**Versioning**: spec version is always equal to
+`OPENAPI_DOCUMENTATION.info.version` in
+`postio-api/api/lib/openApiDocumentation.js` (currently 1.0.2).
 Bumping that single field and merging to master cascades to
-`@postio/openapi` (auto-publish) and `@postio/api-types` (next
-codegen run). Major version bump only on breaking change.
+`@postio/openapi` (auto-publish) → `@postio/api-types` on the next
+master push to this repo. Major version bump only on breaking change.
 
 **Open follow-up**: wire `revalidateTag('openapi-spec')` from
 `postio-api`'s deploy step so a prod deploy invalidates the
@@ -589,40 +589,32 @@ these are accounting/ops tools, not address-capture surfaces.
 
 ---
 
-## 10. Open questions / TODO before Phase 1 starts
+## 10. Open questions / TODO
 
-These need resolving before we start cutting code. Not blockers for
-spec authoring; are blockers for shipping.
+Live ones only — resolved questions have been folded into the relevant
+section bodies above and trimmed from this list.
 
-1. ~~**npm scope**~~ — **resolved**: `@postio` ✓ owned.
-2. ~~**PyPI / Packagist / NuGet handles**~~ — **resolved**: `postio` ✓
-   owned on PyPI, Packagist, NuGet (Microsoft account registered for
-   NuGet access).
-3. ~~**GitHub org**~~ — **resolved**: `postio-uk` ✓ owned. All
-   existing repos migrated. Local origins on Olly's box pointed at
-   `git@github.com:postio-uk/<repo>.git`.
-4. **`cdn.postio.co.uk` Worker**: DNS already in place (CNAME →
-   `postio.co.uk`, orange-cloud, mirrors `api` / `stage-api`).
-   Worker fronting R2 still needs to ship before drop-in JS lands.
-   [Owner: Olly + Claude]
-5. **`docs.postio.co.uk` vs `postio.co.uk/docs`**: confirm doc subdomain
-   for `.md` mirror to live under. [Owner: Olly]
-   - The OpenAPI spec already serves at `postio.co.uk/openapi.json`
-     (see §4.1) regardless of which path the rendered docs UI lives at.
-6. ~~**OpenAPI authoring vs generation**~~ — **resolved**. `postio-api`
-   generates the spec from Zod schemas via `hono-openapi` +
-   `zod-openapi`. Public exposure shipped 2026-04-30 — see §4.1.
-7. **Postman collection automation**: do we ship one? It's cheap to
-   generate from OpenAPI. Default: yes, ship as
-   `@postio/postman-collection`.
-8. **MCP Skill vs Anthropic Skill vs both**: decide whether the MCP
-   server alone is enough or whether we also publish a Claude Skill
+1. **R2 buckets + bind to `cdn.postio.co.uk` Worker**. DNS, route, and
+   placeholder Worker are live. Need `wrangler r2 bucket create
+   postio-cdn-bundles` (and `…-stage`) plus the `[[r2_buckets]]`
+   blocks uncommented in `cdn-worker/wrangler.toml`. CF token may
+   need R2 admin scope added.
+2. **`docs.postio.co.uk` vs `postio.co.uk/docs`**: confirm doc
+   subdomain for the planned `.md` mirror. The OpenAPI spec already
+   serves at `postio.co.uk/openapi.json` regardless of which path the
+   rendered docs UI lives at.
+3. **Postman collection automation**: ship `@postio/postman-collection`
+   alongside `@postio/api-types`? Cheap to generate via
+   `openapi-to-postmanv2`. Default: yes.
+4. **MCP server vs Claude Skill vs both**: decide whether the MCP
+   server alone is enough or whether to also publish a Claude Skill
    bundle. Default: ship both — they target different surfaces.
-9. **Telemetry transport**: confirm the Workers-side endpoint and
-   storage (probably DDB events table or a CF Analytics Engine binding).
-10. ~~**Pricing tier for free vs paid integrations**~~ — **resolved**:
-    every integration is free; revenue is API credits only. No paid
-    plugin tiers, no add-on SKUs. (Confirmed by Olly 2026-04-30.)
+5. **Telemetry transport** for drop-in JS / SDKs: confirm the
+   Workers-side endpoint and storage (probably DDB events table or a
+   CF Analytics Engine binding).
+6. **Make `postio-uk/postio-api` public** to re-enable
+   `npm publish --provenance`. Worth doing if no sensitive code is in
+   there. Audit first.
 
 ---
 
