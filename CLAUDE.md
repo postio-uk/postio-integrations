@@ -54,9 +54,10 @@ npm run deploy               # wrangler deploy (= prod)
 | `NPM_TOKEN` | `release-packages.yml` (publishes `@postio/*`) |
 | `CLOUDFLARE_API_TOKEN` | `deploy-cdn-worker.yml` |
 | `CLOUDFLARE_ACCOUNT_ID` | `deploy-cdn-worker.yml` |
-| `CLOUDFLARE_ZONE_ID` | `deploy-cdn-worker.yml` |
 
 Same values as the corresponding secrets in `postio-uk/postio-api`.
+(`CLOUDFLARE_ZONE_ID` is unused — wrangler resolves zones via the
+`zone_name` field in `wrangler.toml`. Don't add it.)
 
 ## What does NOT live here
 
