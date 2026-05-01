@@ -629,9 +629,13 @@ section bodies above and trimmed from this list.
    rendered docs UI lives at.
 3. ~~**Postman collection automation**.~~ ✓ Shipped as
    [`@postio/postman-collection@1.0.2`](https://www.npmjs.com/package/@postio/postman-collection).
-4. **MCP server vs Claude Skill vs both**: decide whether the MCP
-   server alone is enough or whether to also publish a Claude Skill
-   bundle. Default: ship both — they target different surfaces.
+4. **MCP server vs Claude Skill vs both**: ◐ MCP shipped as
+   [`@postio/mcp@0.1.0`](https://www.npmjs.com/package/@postio/mcp) —
+   6 tools (`postio_address_search` / `_postcode_lookup` /
+   `_udprn_lookup` / `_email_validate` / `_phone_validate` /
+   `_connect`), stdio transport, `POSTIO_API_KEY` env. Claude Skill
+   bundle still TBD — different surface (Anthropic Skills marketplace
+   vs every-host MCP config), revisit per ROADMAP Phase 1.
 5. **Telemetry transport** for drop-in JS / SDKs: confirm the
    Workers-side endpoint and storage (probably DDB events table or a
    CF Analytics Engine binding). Drop-in v0.1 ships without the `/_t`

@@ -40,18 +40,17 @@ Status legend: `□ ` not started · `◐ ` in flight · `■ ` shipped.
   timeout.
 - ■ **`@postio/postman-collection@1.0.2`** — Postman v2.1 collection
   generated from `@postio/openapi`.
-- ◐ **`@postio/address-finder@1.0.0`** — drop-in UK address autocomplete
+- ■ **`@postio/address-finder@1.0.0`** — drop-in UK address autocomplete
   source package. ARIA combobox, keyboard nav, theming via CSS custom
-  properties, `output` map for DOM field population. Source landed on
-  `stage`; publishes on next master push.
-- ◐ **`@postio/address-finder-bundled@1.0.0`** — CDN/script-tag build of
-  the above. IIFE (`window.Postio.AddressFinder.setup`) + ESM, ~4.2 KB
-  gzipped. Auto-uploads to `cdn.postio.co.uk/v1/...` (and the stage
-  CDN) via `deploy-cdn-bundles.yml`.
-- ◐ **`@postio/react@0.1.0`** — `<PostioProvider>` + TanStack-Query-backed
+  properties, `output` map for DOM field population.
+- ■ **`@postio/address-finder-bundled@1.0.0`** — CDN/script-tag build.
+  IIFE (`window.Postio.AddressFinder.setup`) + ESM, ~4.2 KB gzipped.
+  Live at `cdn.postio.co.uk/v1/address-finder.js` and the immutable
+  `/v1.0.0/` pin.
+- ■ **`@postio/react@0.1.0`** — `<PostioProvider>` + TanStack-Query-backed
   hooks (`useAddressSearch` etc.) + `<AddressFinder>` component wrapping
-  the source package. Auto-detects an existing `QueryClientProvider` or
-  mounts one. Source landed on `stage`; publishes on next master push.
+  the source package. Auto-detects an existing `QueryClientProvider`
+  or mounts one.
 - □ **Examples gallery** — plain-html, nextjs-app-router, react-vite,
   vue-3, svelte-kit, astro, cloudflare-workers-server. Depends on:
   drop-in + core + react.
@@ -75,9 +74,13 @@ All independent. Pick whichever to ship first.
   block included. See SPEC §6.
 - □ **Shopify app** — Theme App Extension (storefront) + embedded
   admin (Remix template). Shopify App Store listing.
-- □ **MCP server `@postio/mcp`** — `npx -y @postio/mcp`. Tools for
-  address search / postcode / udprn, email, phone. One-line install
-  for Claude Desktop, Cursor, Windsurf, Zed.
+- ◐ **`@postio/mcp@0.1.0`** — Model Context Protocol server.
+  `npx -y @postio/mcp`. 6 tools (`postio_address_search`,
+  `postio_postcode_lookup`, `postio_udprn_lookup`,
+  `postio_email_validate`, `postio_phone_validate`, `postio_connect`).
+  Reads `POSTIO_API_KEY` from env. One-line install for Claude
+  Desktop / Code, Cursor, Windsurf, Zed. Source landed on `stage`;
+  publishes on next master push.
 - □ **Claude Skill** — Anthropic Skills marketplace. Ideal Postcodes'
   `skills` GitHub repo is empty; first-mover.
 - □ **GPT Action manifest** — register Postio as a custom GPT Action.

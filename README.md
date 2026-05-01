@@ -28,8 +28,9 @@ postio-integrations/
 │   ├── postman-collection/       @postio/postman-collection — Postman v2.1 export
 │   ├── address-finder/           @postio/address-finder — drop-in autocomplete (source)
 │   ├── address-finder-bundled/   @postio/address-finder-bundled — CDN/script-tag build
-│   └── react/                    @postio/react — hooks + <AddressFinder>
-│   (more to come — mcp, cli, create, …)
+│   ├── react/                    @postio/react — hooks + <AddressFinder>
+│   └── mcp/                      @postio/mcp — Model Context Protocol server
+│   (more to come — cli, create, …)
 ├── cdn-worker/                  Cloudflare Worker for cdn.postio.co.uk
 ├── examples/                    (planned) framework demos
 └── .github/workflows/
@@ -56,9 +57,10 @@ Out of scope for this repo (each its own):
 | `@postio/core` runtime client | ✓ 0.1.0 |
 | `@postio/node` server SDK | ✓ 0.1.0 |
 | `@postio/postman-collection` | ✓ 1.0.2 |
-| `@postio/address-finder` (source) | ◐ source landed on `stage` at `1.0.0`, publishes on next master push |
-| `@postio/address-finder-bundled` (CDN) | ◐ source landed on `stage` at `1.0.0`, publishes + R2 upload on next master push |
-| `@postio/react` | ◐ source landed on `stage` at `0.1.0`, publishes on next master push |
+| `@postio/address-finder` (source) | ✓ 1.0.0 |
+| `@postio/address-finder-bundled` (CDN) | ✓ 1.0.0 (live at `cdn.postio.co.uk/v1/address-finder.js`) |
+| `@postio/react` | ✓ 0.1.0 |
+| `@postio/mcp` (Model Context Protocol server) | ◐ source landed on `stage` at `0.1.0`, publishes on next master push |
 
 See [`ROADMAP.md`](./ROADMAP.md) for the full forward look.
 
