@@ -3,13 +3,14 @@ main = "src/index.js"
 compatibility_date = "2026-04-30"
 workers_dev = false
 
-# Prod route — bound by `wrangler deploy` (no --env flag = prod, per the
-# postio-api convention). Uncomment after the R2 bucket is created and
-# DNS is verified.
-# routes = [
-#   { pattern = "cdn.postio.co.uk/*", zone_name = "postio.co.uk" }
-# ]
+# Prod route. DNS for cdn.postio.co.uk is in place (CNAME → postio.co.uk,
+# orange-cloud). With no R2 bucket bound, the Worker serves the
+# "coming soon" page at / and 503 on versioned paths.
+routes = [
+  { pattern = "cdn.postio.co.uk/*", zone_name = "postio.co.uk" }
+]
 
+# Uncomment once `wrangler r2 bucket create postio-cdn-bundles` has run.
 # [[r2_buckets]]
 # binding = "BUNDLES"
 # bucket_name = "postio-cdn-bundles"
