@@ -46,9 +46,9 @@ Out of scope for this repo (each its own):
 | `postio.co.uk/openapi.{json,yaml}` | ✓ live, 15 schemas |
 | `postio.co.uk/llms.txt` + `claude.md` + `cursor.md` + `.cursorrules` | ✓ live |
 | `@postio/api-types` on npm | ✓ 1.0.2 |
-| `cdn.postio.co.uk` + `stage-cdn.postio.co.uk` Workers | ✓ live (placeholder; R2 pending) |
+| `cdn.postio.co.uk` + `stage-cdn.postio.co.uk` Workers | ✓ live, R2-backed (smoke: `curl https://cdn.postio.co.uk/v1/hello.js`) |
 | `@postio/core` runtime client | next |
-| Drop-in JS `@postio/address-finder` | depends on `core` + R2 |
+| Drop-in JS `@postio/address-finder` | depends on `core` |
 
 See [`ROADMAP.md`](./ROADMAP.md) for the full forward look.
 

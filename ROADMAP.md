@@ -21,17 +21,15 @@ Status legend: `□ ` not started · `◐ ` in flight · `■ ` shipped.
   spec via `openapi-typescript`. Auto-publishes via
   `release-packages.yml` on master push to this repo (lockstep version
   with `@postio/openapi`).
-- ■ **`cdn.postio.co.uk` + `stage-cdn.postio.co.uk` Workers** live in
-  placeholder mode. Serves "coming soon" at `/`, `503` on versioned
-  paths until R2 is bound. Route + DNS verified. Auto-deploys via
+- ■ **`cdn.postio.co.uk` + `stage-cdn.postio.co.uk` Workers** live and
+  R2-backed. `/` serves the "coming soon" page; `/vN/<file>` and
+  `/vN.M.P/<file>` serve from the `postio-cdn-bundles` R2 bucket with
+  SWR + immutable cache headers respectively. Smoke: `curl
+  https://cdn.postio.co.uk/v1/hello.js`. Auto-deploys via
   `deploy-cdn-worker.yml`.
 
 ## Next — finishing Phase 0
 
-- ◐ **R2 buckets + bind to CDN Worker**. Create
-  `postio-cdn-bundles` and `postio-cdn-bundles-stage`; uncomment the
-  `[[r2_buckets]]` blocks in `cdn-worker/wrangler.toml`. Unblocks the
-  drop-in JS work below.
 - □ **`@postio/core`** — runtime-agnostic typed client
   (Workers / Node / Bun / browser). Wraps `fetch`, returns the API
   envelope unchanged. The most-leveraged downstream package; everything
