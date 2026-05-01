@@ -10,10 +10,9 @@ routes = [
   { pattern = "cdn.postio.co.uk/*", zone_name = "postio.co.uk" }
 ]
 
-# Uncomment once `wrangler r2 bucket create postio-cdn-bundles` has run.
-# [[r2_buckets]]
-# binding = "BUNDLES"
-# bucket_name = "postio-cdn-bundles"
+[[r2_buckets]]
+binding = "BUNDLES"
+bucket_name = "postio-cdn-bundles"
 
 [observability]
 enabled = true
@@ -28,6 +27,6 @@ routes = [
   { pattern = "stage-cdn.postio.co.uk/*", zone_name = "postio.co.uk" }
 ]
 
-# [[env.stage.r2_buckets]]
-# binding = "BUNDLES"
-# bucket_name = "postio-cdn-bundles-stage"
+[[env.stage.r2_buckets]]
+binding = "BUNDLES"
+bucket_name = "postio-cdn-bundles-stage"
