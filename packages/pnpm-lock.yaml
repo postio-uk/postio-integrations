@@ -20,6 +20,16 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  core:
+    dependencies:
+      '@postio/api-types':
+        specifier: 1.0.2
+        version: 1.0.2
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
 packages:
 
   '@babel/code-frame@7.29.0':
@@ -29,6 +39,9 @@ packages:
   '@babel/helper-validator-identifier@7.28.5':
     resolution: {integrity: sha512-qSs4ifwzKJSV39ucNjsvc6WVHs6b7S03sOh2OcHF9UHfVPqWWALUsNUVzhSBiItjRZoLHx7nIarVjqKVusUZ1Q==}
     engines: {node: '>=6.9.0'}
+
+  '@postio/api-types@1.0.2':
+    resolution: {integrity: sha512-f6qxn5MHW+gCIpYBGug/27CWlDzXQolRTw4PhHzz4cYd2M9snt+bpRPoVd5MDCtDeoiy8kjruhCse/mDOrRKpQ==}
 
   '@postio/openapi@1.0.2':
     resolution: {integrity: sha512-yLBc1INQRgtEQBn3dpVJiRk0d5Nt7tZgLZ1aPb9j4Fmnuzbb5ctjYLkhuz1bYcWNkzFX0ecfe6A4VIoTkne9kQ==}
@@ -160,6 +173,8 @@ snapshots:
       picocolors: 1.1.1
 
   '@babel/helper-validator-identifier@7.28.5': {}
+
+  '@postio/api-types@1.0.2': {}
 
   '@postio/openapi@1.0.2': {}
 

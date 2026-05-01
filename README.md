@@ -22,8 +22,9 @@ repo consumes that spec.
 ```
 postio-integrations/
 ├── packages/                    pnpm workspace; one publishable npm pkg per subdir
-│   └── api-types/               @postio/api-types — TS types from the spec
-│   (more to come — core, react, address-finder, mcp, cli, …)
+│   ├── api-types/               @postio/api-types — TS types from the spec
+│   └── core/                    @postio/core — runtime-agnostic typed client
+│   (more to come — react, address-finder, mcp, cli, …)
 ├── cdn-worker/                  Cloudflare Worker for cdn.postio.co.uk
 ├── examples/                    (planned) framework demos
 └── .github/workflows/
@@ -47,7 +48,7 @@ Out of scope for this repo (each its own):
 | `postio.co.uk/llms.txt` + `claude.md` + `cursor.md` + `.cursorrules` | ✓ live |
 | `@postio/api-types` on npm | ✓ 1.0.2 |
 | `cdn.postio.co.uk` + `stage-cdn.postio.co.uk` Workers | ✓ live, R2-backed (smoke: `curl https://cdn.postio.co.uk/v1/hello.js`) |
-| `@postio/core` runtime client | next |
+| `@postio/core` runtime client | ◐ source landed on `stage` at `0.1.0`, publishes on next master push |
 | Drop-in JS `@postio/address-finder` | depends on `core` |
 
 See [`ROADMAP.md`](./ROADMAP.md) for the full forward look.

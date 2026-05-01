@@ -1,0 +1,59 @@
+{
+  "name": "@postio/core",
+  "version": "0.1.0",
+  "description": "Runtime-agnostic typed client for the Postio API (Workers / Node / Bun / Deno / browser).",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "pnpm run build"
+  },
+  "homepage": "https://postio.co.uk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/postio-uk/postio-integrations.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/postio-uk/postio-integrations/issues"
+  },
+  "keywords": [
+    "postio",
+    "uk",
+    "address",
+    "postcode",
+    "email",
+    "phone",
+    "validation",
+    "paf",
+    "royal-mail",
+    "client",
+    "sdk",
+    "typescript",
+    "fetch"
+  ],
+  "dependencies": {
+    "@postio/api-types": "1.0.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

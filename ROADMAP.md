@@ -30,10 +30,11 @@ Status legend: `□ ` not started · `◐ ` in flight · `■ ` shipped.
 
 ## Next — finishing Phase 0
 
-- □ **`@postio/core`** — runtime-agnostic typed client
+- ◐ **`@postio/core`** — runtime-agnostic typed client
   (Workers / Node / Bun / browser). Wraps `fetch`, returns the API
   envelope unchanged. The most-leveraged downstream package; everything
-  below uses it.
+  below uses it. Source landed on `stage` at `0.1.0`; auto-publishes on
+  next master push.
 - □ **Drop-in JS `@postio/address-finder` + `@postio/address-finder-bundled`** —
   the headline product. Public API:
   `Postio.AddressFinder.setup({ apiKey, outputFields })`.

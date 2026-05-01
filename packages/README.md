@@ -6,21 +6,20 @@ publishes. One repo, many packages, single dependency graph.
 See [`../SPEC.md`](../SPEC.md) §3.1 (mono/multi-repo split) and §4 for
 the contracts each package must satisfy.
 
-## Planned packages
+## Packages
 
 | Package | Status | Purpose |
 |---|---|---|
-| `@postio/openapi` | planned | OpenAPI spec snapshot (JSON + YAML), published from `postio-api` CI on tag. The single source of truth for everything else here. |
-| `@postio/api-types` | planned | TypeScript types generated from `@postio/openapi` via `openapi-typescript`. |
-| `@postio/core` | planned | Runtime-agnostic typed client (Workers / Node / Bun / browser). |
-| `@postio/browser` | planned | Browser-flavoured client (built on `core`). |
-| `@postio/node` | planned | Node-flavoured server SDK (built on `core`). |
-| `@postio/react` | planned | Hooks + components. |
-| `@postio/address-finder` | planned | Drop-in autocomplete UI source. |
-| `@postio/address-finder-bundled` | planned | CDN bundle build of `address-finder`. |
-| `@postio/mcp` | planned | MCP server for AI agents. |
-| `@postio/cli` | planned | `npx postio` CLI. |
-| `@postio/create` | planned | `npx create-postio-app` scaffolder. |
+| [`@postio/openapi`](https://www.npmjs.com/package/@postio/openapi) | ■ 1.0.2 (lives in `postio-api`, consumed here) | OpenAPI spec snapshot (JSON + YAML). Single source of truth. |
+| [`@postio/api-types`](./api-types) | ■ 1.0.2 | TypeScript types generated from `@postio/openapi` via `openapi-typescript`. |
+| [`@postio/core`](./core) | ◐ 0.1.0 (source on `stage`) | Runtime-agnostic typed client (Workers / Node / Bun / Deno / browser). |
+| `@postio/react` | □ planned | Hooks + components on top of `core`. |
+| `@postio/node` | □ planned | Node-flavoured server SDK on top of `core`. |
+| `@postio/address-finder` | □ planned | Drop-in autocomplete UI source. |
+| `@postio/address-finder-bundled` | □ planned | CDN bundle build of `address-finder`. |
+| `@postio/mcp` | □ planned | MCP server for AI agents. |
+| `@postio/cli` | □ planned | `npx postio` CLI. |
+| `@postio/create` | □ planned | `npx create-postio-app` scaffolder. |
 
 ## Conventions
 
@@ -37,5 +36,3 @@ the contracts each package must satisfy.
 pnpm install
 pnpm -r build
 ```
-
-(no packages exist yet — workspace is freshly scaffolded)
