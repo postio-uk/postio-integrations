@@ -7,7 +7,7 @@ Each row is a one-time PR or form submission. Track status here.
 
 | Directory | Type | Status | Submission method |
 |---|---|---|---|
-| [awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) | Curated GitHub list | □ pending | PR adding entry under "🔍 Search & Data" |
+| [awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) | Curated GitHub list (86k★) | ◐ PR open: [#5689](https://github.com/punkpeye/awesome-mcp-servers/pull/5689) | Filed 2026-05-01 under Location Services with 🤖🤖🤖 fast-track marker |
 | [mcp.so](https://mcp.so) | Hosted directory | □ pending | Submit form on site |
 | [glama.ai/mcp/servers](https://glama.ai/mcp/servers) | Hosted directory | □ pending | Submit form on site |
 | [Cursor MCP "Add to Cursor"](https://cursor.com/learn/mcp) | One-click install button | □ pending | Generate + share https://cursor.com/install-mcp URL |
