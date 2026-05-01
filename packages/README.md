@@ -13,11 +13,11 @@ the contracts each package must satisfy.
 | [`@postio/openapi`](https://www.npmjs.com/package/@postio/openapi) | ■ 1.0.2 (lives in `postio-api`, consumed here) | OpenAPI spec snapshot (JSON + YAML). Single source of truth. |
 | [`@postio/api-types`](./api-types) | ■ 1.0.2 | TypeScript types generated from `@postio/openapi` via `openapi-typescript`. |
 | [`@postio/core`](./core) | ■ 0.1.0 | Runtime-agnostic typed client (Workers / Node / Bun / Deno / browser). |
-| [`@postio/node`](./node) | ◐ 0.1.0 (source on `stage`) | Node server SDK over `core` — retries, jitter, logger hook. |
-| [`@postio/postman-collection`](./postman-collection) | ◐ 1.0.2 (source on `stage`) | Postman v2.1 collection generated from `@postio/openapi`. |
-| `@postio/react` | □ planned | Hooks + components on top of `core`. |
-| `@postio/address-finder` | □ planned | Drop-in autocomplete UI source. |
-| `@postio/address-finder-bundled` | □ planned | CDN bundle build of `address-finder`. |
+| [`@postio/node`](./node) | ■ 0.1.0 | Node server SDK over `core` — retries, jitter, logger hook. |
+| [`@postio/postman-collection`](./postman-collection) | ■ 1.0.2 | Postman v2.1 collection generated from `@postio/openapi`. |
+| [`@postio/address-finder`](./address-finder) | ◐ 0.1.0 (source on `stage`) | Drop-in autocomplete UI — accessible combobox, ARIA, keyboard nav, themable. |
+| [`@postio/address-finder-bundled`](./address-finder-bundled) | ◐ 0.1.0 (source on `stage`) | CDN/script-tag bundle of `address-finder` (~4.2 KB gzipped). |
+| [`@postio/react`](./react) | ◐ 0.1.0 (source on `stage`) | `<PostioProvider>`, hooks, and `<AddressFinder>` for React. |
 | `@postio/mcp` | □ planned | MCP server for AI agents. |
 | `@postio/cli` | □ planned | `npx postio` CLI. |
 | `@postio/create` | □ planned | `npx create-postio-app` scaffolder. |

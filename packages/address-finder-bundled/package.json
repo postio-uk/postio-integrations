@@ -1,0 +1,55 @@
+{
+  "name": "@postio/address-finder-bundled",
+  "version": "0.1.0",
+  "description": "Pre-bundled drop-in build of @postio/address-finder. Loadable via <script> tag.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/address-finder.js",
+  "module": "./dist/address-finder.esm.js",
+  "browser": "./dist/address-finder.js",
+  "types": "./dist/address-finder.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/address-finder.d.ts",
+      "import": "./dist/address-finder.esm.js",
+      "default": "./dist/address-finder.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "pnpm run build"
+  },
+  "homepage": "https://postio.co.uk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/postio-uk/postio-integrations.git",
+    "directory": "packages/address-finder-bundled"
+  },
+  "bugs": {
+    "url": "https://github.com/postio-uk/postio-integrations/issues"
+  },
+  "keywords": [
+    "postio",
+    "uk",
+    "address",
+    "postcode",
+    "autocomplete",
+    "drop-in",
+    "cdn",
+    "bundle"
+  ],
+  "devDependencies": {
+    "@postio/address-finder": "workspace:*",
+    "@postio/core": "workspace:*",
+    "tsup": "^8.3.5",
+    "typescript": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

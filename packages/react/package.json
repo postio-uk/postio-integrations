@@ -1,0 +1,64 @@
+{
+  "name": "@postio/react",
+  "version": "0.1.0",
+  "description": "React hooks and components for the Postio API — UK address, email, and phone validation.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "pnpm run build"
+  },
+  "homepage": "https://postio.co.uk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/postio-uk/postio-integrations.git",
+    "directory": "packages/react"
+  },
+  "bugs": {
+    "url": "https://github.com/postio-uk/postio-integrations/issues"
+  },
+  "keywords": [
+    "postio",
+    "react",
+    "uk",
+    "address",
+    "postcode",
+    "email",
+    "phone",
+    "validation",
+    "hooks",
+    "autocomplete"
+  ],
+  "dependencies": {
+    "@postio/address-finder": "workspace:^",
+    "@postio/core": "workspace:^"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@tanstack/react-query": "^5.59.0",
+    "@types/react": "^18.3.0",
+    "react": "^18.3.0",
+    "typescript": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

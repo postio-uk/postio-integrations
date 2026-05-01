@@ -1,0 +1,105 @@
+name: Deploy CDN bundles
+
+# Builds @postio/address-finder-bundled and uploads it to the
+# `postio-cdn-bundles` R2 bucket (or `-stage` on stage), where the
+# postio-cdn Worker serves it from cdn.postio.co.uk / stage-cdn…
+#
+# Per SPEC §4.3:
+#   /v{MAJOR}/<file>           → tracks latest x.y.z under that major
+#   /v{MAJOR}.{MINOR}.{PATCH}/<file>  → exact pin, immutable
+#
+# Idempotent — re-running the same version overwrites the floating
+# /vN/ pointer and re-publishes the immutable pin (same bytes, same etag).
+
+on:
+  push:
+    branches: [stage, master]
+    paths:
+      - 'packages/address-finder/**'
+      - 'packages/address-finder-bundled/**'
+      - '.github/workflows/deploy-cdn-bundles.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+          cache-dependency-path: packages/pnpm-lock.yaml
+
+      - name: Install workspace
+        working-directory: packages
+        run: pnpm install --frozen-lockfile
+
+      - name: Build bundles
+        working-directory: packages
+        run: pnpm -F @postio/address-finder-bundled build
+
+      - name: Resolve version + bucket
+        id: vars
+        run: |
+          set -e
+          version=$(node -p "require('./packages/address-finder-bundled/package.json').version")
+          major=$(echo "$version" | cut -d. -f1)
+          if [ "${{ github.ref }}" = "refs/heads/master" ]; then
+            bucket="postio-cdn-bundles"
+            host="cdn.postio.co.uk"
+          else
+            bucket="postio-cdn-bundles-stage"
+            host="stage-cdn.postio.co.uk"
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "major=$major"     >> "$GITHUB_OUTPUT"
+          echo "bucket=$bucket"   >> "$GITHUB_OUTPUT"
+          echo "host=$host"       >> "$GITHUB_OUTPUT"
+          echo "::notice ::will upload v$version → $bucket (served at $host)"
+
+      - name: Upload bundles to R2
+        working-directory: packages/address-finder-bundled/dist
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          BUCKET: ${{ steps.vars.outputs.bucket }}
+          VERSION: ${{ steps.vars.outputs.version }}
+          MAJOR: ${{ steps.vars.outputs.major }}
+        run: |
+          set -e
+          for f in address-finder.js address-finder.esm.js \
+                   address-finder.js.map address-finder.esm.js.map; do
+            [ -f "$f" ] || { echo "::warning ::missing $f"; continue; }
+            case "$f" in
+              *.map) ct="application/json; charset=utf-8" ;;
+              *.js)  ct="application/javascript; charset=utf-8" ;;
+            esac
+            for prefix in "v$MAJOR" "v$VERSION"; do
+              key="$prefix/$f"
+              echo "::notice ::PUT $BUCKET/$key"
+              npx --yes wrangler r2 object put "$BUCKET/$key" \
+                --remote \
+                --file="$f" \
+                --content-type="$ct"
+            done
+          done
+
+      - name: Smoke-test served bundle
+        env:
+          HOST: ${{ steps.vars.outputs.host }}
+          MAJOR: ${{ steps.vars.outputs.major }}
+          VERSION: ${{ steps.vars.outputs.version }}
+        run: |
+          set -e
+          for url in \
+            "https://$HOST/v$MAJOR/address-finder.js" \
+            "https://$HOST/v$VERSION/address-finder.js"; do
+            echo "::notice ::HEAD $url"
+            curl -fsSI "$url" | head -5
+          done

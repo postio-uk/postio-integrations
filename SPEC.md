@@ -290,34 +290,49 @@ master push to this repo. Major version bump only on breaking change.
 - Repo: `postio-integrations/packages/address-finder/` (source) +
   `postio-integrations/packages/address-finder-bundled/` (CDN bundle
   build).
-- Public API matches what reads naturally to a developer who's used IP:
+- Public API. Names chosen for brevity — `output` (not IP's
+  `outputFields`), `input` (not `inputField`), `onSelect` (not
+  `onAddressSelected`). The bound field keys are the API field names
+  themselves (locked by the API contract):
   ```html
   <script src="https://cdn.postio.co.uk/v1/address-finder.js"></script>
   <script>
     Postio.AddressFinder.setup({
       apiKey: "pk_live_…",
-      outputFields: {
-        line_1:    "#address_line_1",
-        line_2:    "#address_line_2",
-        post_town: "#town",
-        postcode:  "#postcode",
-        county:    "#county",
+      input: "#address-search",
+      output: {
+        address_line_1: "#line_1",
+        post_town:      "#town",
+        postcode:       "#postcode",
+        county:         "#county",
       },
+      onSelect: (address) => { /* full Address record */ },
     });
-  </script>
   ```
-- Bundle outputs:
-  - `address-finder.umd.min.js` — UMD, polyfilled, modern browsers.
-  - `address-finder.esm.min.js` — ESM, polyfilled.
-  - `address-finder.esm.modern.min.js` — ESM, no polyfills, smallest.
-  - All built by `tsup` or `vite` with size budgets in CI.
-- Size budget: gzipped modern ESM **must stay under 8 KB**. Cap at 12 KB
-  hard limit.
-- Theming: CSS custom properties for colours, radii, spacing. No CSS-in-JS.
-- A11y: full keyboard nav, ARIA combobox pattern, `prefers-reduced-motion`
-  respected, screen-reader-tested.
-- Telemetry: optional `onLookup`, `onSelect`, `onError` callbacks. No
-  silent network calls beyond the API itself.
+- Bundle outputs (built by `tsup`):
+  - `dist/address-finder.js` — IIFE, ES2020 target. Drops into
+    `<script>` tags. Sets `window.Postio.AddressFinder.setup`.
+  - `dist/address-finder.esm.js` — ESM, ES2020 target. For
+    `<script type="module">` and bundlers.
+  - Both ship a sourcemap for production debuggability.
+- Size budget: gzipped IIFE **stays under 8 KB**, hard cap 12 KB.
+  Currently shipping at **~4.2 KB gzipped**.
+- **Theming**: minimal sane defaults so the widget is usable in bare
+  HTML, with everything visual exposed as CSS custom properties on
+  `--postio-af-*`. Inherits font, color, font-size from the parent
+  page. `bare: true` in `setup()` ships only structural CSS — for
+  consumers who want full visual control. Decision rationale: pure
+  inherit (no shipped CSS) looks broken in plain HTML, which is
+  exactly the audience for the CDN drop-in. See package README for
+  the full var list.
+- **A11y**: WAI-ARIA 1.2 combobox pattern (`role="combobox"`,
+  `aria-expanded`, `aria-controls`, `aria-activedescendant`), full
+  keyboard nav (↑↓ Home End Enter Esc Tab), mouse hover follows
+  keyboard highlight.
+- **Telemetry**: optional `onSearch`, `onSelect`, `onError`,
+  `onReady` callbacks. No silent network calls beyond the API itself
+  in v0.1 — the planned `/_t` adoption ping is deferred to a later
+  release once we land the Workers-side endpoint (SPEC §10 #5).
 
 ### 4.3 CDN strategy — own first, jsDelivr fallback
 
@@ -367,14 +382,23 @@ Versioning rule for `cdn.postio.co.uk`:
 
 ### 4.5 React package — `@postio/react`
 
-- Hooks: `useAddressSearch`, `usePostcodeLookup`, `useEmailValidation`,
-  `usePhoneValidation`. Built on TanStack Query (peer dep) so users get
-  caching/dedup for free.
-- Components: `<AddressFinder>`, `<PostcodeLookup>`, headless versions
-  of each. Themable via CSS variables (same tokens as the drop-in).
-- `<PostioProvider>` for API key + base URL config.
-- Server-component-safe: usable from React Server Components for the
-  one-shot lookups; the autocomplete is `'use client'` only.
+- Hooks: `useAddressSearch`, `usePostcode`, `useUdprn`,
+  `useEmailValidation`, `usePhoneValidation`, `useConnect`. Built on
+  TanStack Query (peer dep) so users get caching + dedup + AbortSignal
+  wiring for free. Each hook auto-disables when its input is
+  empty/null, with `enabled` override.
+- `<PostioProvider apiKey baseUrl>` holds the client. Auto-detects an
+  existing `QueryClientProvider` higher in the tree and uses it;
+  mounts a fresh one if none is found, so the hooks Just Work for
+  first-time users.
+- `<AddressFinder>` — wraps the source `@postio/address-finder` package
+  in a React component. Renders a real `<input>` (forwards every
+  standard input prop), mounts the finder on first render, tears down
+  on unmount. Recommended path is `onSelect` (capture the full address
+  in React state); the `output` map is supported as an escape hatch
+  for non-React fields.
+- Every public file ships `"use client"` at the top. One-shot lookups
+  on the server should use `@postio/core` directly.
 
 ### 4.6 Server SDKs — Node
 
@@ -594,24 +618,24 @@ these are accounting/ops tools, not address-capture surfaces.
 Live ones only — resolved questions have been folded into the relevant
 section bodies above and trimmed from this list.
 
-1. **R2 buckets + bind to `cdn.postio.co.uk` Worker**. DNS, route, and
-   placeholder Worker are live. Need `wrangler r2 bucket create
-   postio-cdn-bundles` (and `…-stage`) plus the `[[r2_buckets]]`
-   blocks uncommented in `cdn-worker/wrangler.toml`. CF token may
-   need R2 admin scope added.
+1. ~~**R2 buckets + bind to `cdn.postio.co.uk` Worker**.~~ ✓ Live.
+   Buckets `postio-cdn-bundles` and `postio-cdn-bundles-stage` exist;
+   Worker reads from `env.BUNDLES`; `deploy-cdn-bundles.yml` uploads
+   `address-finder.{js,esm.js}` to `/v{MAJOR}/` and `/v{VERSION}/` on
+   stage + master pushes.
 2. **`docs.postio.co.uk` vs `postio.co.uk/docs`**: confirm doc
    subdomain for the planned `.md` mirror. The OpenAPI spec already
    serves at `postio.co.uk/openapi.json` regardless of which path the
    rendered docs UI lives at.
-3. **Postman collection automation**: ship `@postio/postman-collection`
-   alongside `@postio/api-types`? Cheap to generate via
-   `openapi-to-postmanv2`. Default: yes.
+3. ~~**Postman collection automation**.~~ ✓ Shipped as
+   [`@postio/postman-collection@1.0.2`](https://www.npmjs.com/package/@postio/postman-collection).
 4. **MCP server vs Claude Skill vs both**: decide whether the MCP
    server alone is enough or whether to also publish a Claude Skill
    bundle. Default: ship both — they target different surfaces.
 5. **Telemetry transport** for drop-in JS / SDKs: confirm the
    Workers-side endpoint and storage (probably DDB events table or a
-   CF Analytics Engine binding).
+   CF Analytics Engine binding). Drop-in v0.1 ships without the `/_t`
+   ping; revisit before drop-in GA.
 6. **Make `postio-uk/postio-api` public** to re-enable
    `npm publish --provenance`. Worth doing if no sensitive code is in
    there. Audit first.

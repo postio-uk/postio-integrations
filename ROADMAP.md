@@ -34,20 +34,24 @@ Status legend: `□ ` not started · `◐ ` in flight · `■ ` shipped.
   (Workers / Node / Bun / browser). Wraps `fetch`, returns the API
   envelope unchanged. The most-leveraged downstream package; everything
   below uses it.
-- ◐ **`@postio/node@0.1.0`** — Node-flavoured server SDK on top of
-  `core`. Adds retries with exponential backoff + full jitter (default 2,
-  on 408/409/429/5xx + network), a structured logger hook, and a
-  longer 30 s default timeout. Source landed on `stage`; publishes on
-  next master push.
-- ◐ **`@postio/postman-collection@1.0.2`** — Postman v2.1 collection
-  generated from `@postio/openapi`. Source landed on `stage`; publishes
-  on next master push.
-- □ **Drop-in JS `@postio/address-finder` + `@postio/address-finder-bundled`** —
-  the headline product. Public API:
-  `Postio.AddressFinder.setup({ apiKey, outputFields })`.
-  Bundle uploaded to `cdn.postio.co.uk/v1/...` + auto-mirrored on
-  jsDelivr via npm. Depends on: `core` + R2.
-- □ **`@postio/react`** — hooks + components on top of `core`.
+- ■ **`@postio/node@0.1.0`** — Node-flavoured server SDK on top of
+  `core`. Retries with exp backoff + full jitter (default 2, on
+  408/409/429/5xx + network), structured logger hook, 30 s default
+  timeout.
+- ■ **`@postio/postman-collection@1.0.2`** — Postman v2.1 collection
+  generated from `@postio/openapi`.
+- ◐ **`@postio/address-finder@0.1.0`** — drop-in UK address autocomplete
+  source package. ARIA combobox, keyboard nav, theming via CSS custom
+  properties, `output` map for DOM field population. Source landed on
+  `stage`; publishes on next master push.
+- ◐ **`@postio/address-finder-bundled@0.1.0`** — CDN/script-tag build of
+  the above. IIFE (`window.Postio.AddressFinder.setup`) + ESM, ~4.2 KB
+  gzipped. Auto-uploads to `cdn.postio.co.uk/v1/...` (and the stage
+  CDN) via `deploy-cdn-bundles.yml`.
+- ◐ **`@postio/react@0.1.0`** — `<PostioProvider>` + TanStack-Query-backed
+  hooks (`useAddressSearch` etc.) + `<AddressFinder>` component wrapping
+  the source package. Auto-detects an existing `QueryClientProvider` or
+  mounts one. Source landed on `stage`; publishes on next master push.
 - □ **Examples gallery** — plain-html, nextjs-app-router, react-vite,
   vue-3, svelte-kit, astro, cloudflare-workers-server. Depends on:
   drop-in + core + react.
