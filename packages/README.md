@@ -15,8 +15,8 @@ the contracts each package must satisfy.
 | [`@postio/core`](./core) | ■ 0.1.0 | Runtime-agnostic typed client (Workers / Node / Bun / Deno / browser). |
 | [`@postio/node`](./node) | ■ 0.1.0 | Node server SDK over `core` — retries, jitter, logger hook. |
 | [`@postio/postman-collection`](./postman-collection) | ■ 1.0.2 | Postman v2.1 collection generated from `@postio/openapi`. |
-| [`@postio/address-finder`](./address-finder) | ◐ 0.1.0 (source on `stage`) | Drop-in autocomplete UI — accessible combobox, ARIA, keyboard nav, themable. |
-| [`@postio/address-finder-bundled`](./address-finder-bundled) | ◐ 0.1.0 (source on `stage`) | CDN/script-tag bundle of `address-finder` (~4.2 KB gzipped). |
+| [`@postio/address-finder`](./address-finder) | ◐ 1.0.0 (source on `stage`) | Drop-in autocomplete UI — accessible combobox, ARIA, keyboard nav, themable. |
+| [`@postio/address-finder-bundled`](./address-finder-bundled) | ◐ 1.0.0 (source on `stage`) | CDN/script-tag bundle of `address-finder` (~4.2 KB gzipped). |
 | [`@postio/react`](./react) | ◐ 0.1.0 (source on `stage`) | `<PostioProvider>`, hooks, and `<AddressFinder>` for React. |
 | `@postio/mcp` | □ planned | MCP server for AI agents. |
 | `@postio/cli` | □ planned | `npx postio` CLI. |

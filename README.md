@@ -56,8 +56,8 @@ Out of scope for this repo (each its own):
 | `@postio/core` runtime client | ✓ 0.1.0 |
 | `@postio/node` server SDK | ✓ 0.1.0 |
 | `@postio/postman-collection` | ✓ 1.0.2 |
-| `@postio/address-finder` (source) | ◐ source landed on `stage` at `0.1.0`, publishes on next master push |
-| `@postio/address-finder-bundled` (CDN) | ◐ source landed on `stage` at `0.1.0`, publishes + R2 upload on next master push |
+| `@postio/address-finder` (source) | ◐ source landed on `stage` at `1.0.0`, publishes on next master push |
+| `@postio/address-finder-bundled` (CDN) | ◐ source landed on `stage` at `1.0.0`, publishes + R2 upload on next master push |
 | `@postio/react` | ◐ source landed on `stage` at `0.1.0`, publishes on next master push |
 
 See [`ROADMAP.md`](./ROADMAP.md) for the full forward look.

@@ -42,7 +42,10 @@ jobs:
 
       - name: Build bundles
         working-directory: packages
-        run: pnpm -F @postio/address-finder-bundled build
+        # `...@x` builds @x AND every workspace package it depends on, in
+        # the right order. Without this, tsup runs before
+        # @postio/address-finder has emitted dist/ and can't resolve it.
+        run: pnpm -F "...@postio/address-finder-bundled" run build
 
       - name: Resolve version + bucket
         id: vars
