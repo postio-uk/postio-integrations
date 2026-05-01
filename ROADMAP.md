@@ -30,18 +30,24 @@ Status legend: `□ ` not started · `◐ ` in flight · `■ ` shipped.
 
 ## Next — finishing Phase 0
 
-- ◐ **`@postio/core`** — runtime-agnostic typed client
+- ■ **`@postio/core@0.1.0`** — runtime-agnostic typed client
   (Workers / Node / Bun / browser). Wraps `fetch`, returns the API
   envelope unchanged. The most-leveraged downstream package; everything
-  below uses it. Source landed on `stage` at `0.1.0`; auto-publishes on
+  below uses it.
+- ◐ **`@postio/node@0.1.0`** — Node-flavoured server SDK on top of
+  `core`. Adds retries with exponential backoff + full jitter (default 2,
+  on 408/409/429/5xx + network), a structured logger hook, and a
+  longer 30 s default timeout. Source landed on `stage`; publishes on
   next master push.
+- ◐ **`@postio/postman-collection@1.0.2`** — Postman v2.1 collection
+  generated from `@postio/openapi`. Source landed on `stage`; publishes
+  on next master push.
 - □ **Drop-in JS `@postio/address-finder` + `@postio/address-finder-bundled`** —
   the headline product. Public API:
   `Postio.AddressFinder.setup({ apiKey, outputFields })`.
   Bundle uploaded to `cdn.postio.co.uk/v1/...` + auto-mirrored on
   jsDelivr via npm. Depends on: `core` + R2.
 - □ **`@postio/react`** — hooks + components on top of `core`.
-- □ **`@postio/node`** — Node-flavoured server SDK on top of `core`.
 - □ **Examples gallery** — plain-html, nextjs-app-router, react-vite,
   vue-3, svelte-kit, astro, cloudflare-workers-server. Depends on:
   drop-in + core + react.
