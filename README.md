@@ -57,9 +57,9 @@ Out of scope for this repo (each its own):
 | `@postio/core` runtime client | ✓ 0.1.0 |
 | `@postio/node` server SDK | ✓ 0.1.0 |
 | `@postio/postman-collection` | ✓ 1.0.2 |
-| `@postio/address-finder` (source) | ✓ 1.0.0 |
-| `@postio/address-finder-bundled` (CDN) | ✓ 1.0.0 (live at `cdn.postio.co.uk/v1/address-finder.js`) |
-| `@postio/react` | ✓ 0.1.0 |
+| `@postio/address-finder` (source) | ✓ 1.0.1 |
+| `@postio/address-finder-bundled` (CDN) | ✓ 1.0.1 (live at `cdn.postio.co.uk/v1/address-finder.js`) |
+| `@postio/react` | ✓ 0.1.1 |
 | `@postio/mcp` (Model Context Protocol server) | ◐ source landed on `stage` at `0.1.0`, publishes on next master push |
 
 See [`ROADMAP.md`](./ROADMAP.md) for the full forward look.

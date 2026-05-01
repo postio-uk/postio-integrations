@@ -1,6 +1,6 @@
 {
   "name": "@postio/address-finder",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Drop-in UK address autocomplete — accessible combobox over the Postio API.",
   "license": "MIT",
   "type": "module",

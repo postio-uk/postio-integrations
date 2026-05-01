@@ -67,6 +67,9 @@ jobs:
 
             echo "::notice ::publishing $name@$version"
             cd "$pkg_dir"
-            npm publish --access public
+            # Use pnpm publish so workspace: protocol in deps gets resolved
+            # to the actual semver range. npm publish ships the literal
+            # "workspace:^" string which is unusable by consumers.
+            pnpm publish --access public --no-git-checks
             cd ..
           done

@@ -1,6 +1,6 @@
 {
   "name": "@postio/address-finder-bundled",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Pre-bundled drop-in build of @postio/address-finder. Loadable via <script> tag.",
   "license": "MIT",
   "type": "module",
