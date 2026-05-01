@@ -1,0 +1,67 @@
+name: One-shot cleanup of stale cdn.postio.co.uk/* route
+
+# Workaround: wrangler 4 cascaded the top-level prod route into env.stage
+# on first deploy, leaving postio-cdn-stage assigned to cdn.postio.co.uk/*.
+# Wrangler doesn't unassign routes on subsequent deploys, so the prod
+# Worker (postio-cdn) can't claim the route.
+#
+# This workflow walks the postio.co.uk zone's worker routes via the CF
+# API and deletes any route whose pattern is cdn.postio.co.uk/* AND
+# whose script is postio-cdn-stage. Run once after the wrangler config
+# fix lands; the prod deploy on the next master push will then succeed.
+#
+# Delete this workflow file after a clean prod deploy.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    env:
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - name: Resolve zone id for postio.co.uk
+        id: zone
+        run: |
+          ZONE_ID=$(curl -sS -H "Authorization: Bearer $CF_TOKEN" \
+            "https://api.cloudflare.com/client/v4/zones?name=postio.co.uk" \
+            | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d["result"][0]["id"])')
+          echo "zone_id=$ZONE_ID" >> "$GITHUB_OUTPUT"
+          echo "zone resolved: $ZONE_ID"
+
+      - name: List routes in zone (before)
+        run: |
+          curl -sS -H "Authorization: Bearer $CF_TOKEN" \
+            "https://api.cloudflare.com/client/v4/zones/${{ steps.zone.outputs.zone_id }}/workers/routes" \
+            | python3 -m json.tool
+
+      - name: Find and delete cdn.postio.co.uk/* assigned to postio-cdn-stage
+        run: |
+          ROUTE_ID=$(curl -sS -H "Authorization: Bearer $CF_TOKEN" \
+            "https://api.cloudflare.com/client/v4/zones/${{ steps.zone.outputs.zone_id }}/workers/routes" \
+            | python3 -c '
+          import json, sys
+          d = json.load(sys.stdin)
+          for r in d.get("result", []):
+              if r.get("pattern") == "cdn.postio.co.uk/*" and r.get("script") == "postio-cdn-stage":
+                  print(r["id"])
+                  break
+          ')
+          if [ -z "$ROUTE_ID" ]; then
+            echo "::notice ::no matching route — nothing to clean up"
+            exit 0
+          fi
+          echo "::notice ::deleting route $ROUTE_ID"
+          curl -sS -X DELETE -H "Authorization: Bearer $CF_TOKEN" \
+            "https://api.cloudflare.com/client/v4/zones/${{ steps.zone.outputs.zone_id }}/workers/routes/$ROUTE_ID" \
+            | python3 -m json.tool
+
+      - name: List routes in zone (after)
+        run: |
+          curl -sS -H "Authorization: Bearer $CF_TOKEN" \
+            "https://api.cloudflare.com/client/v4/zones/${{ steps.zone.outputs.zone_id }}/workers/routes" \
+            | python3 -m json.tool
