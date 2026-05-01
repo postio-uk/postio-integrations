@@ -102,6 +102,44 @@ To test against a real R2 bucket locally:
 wrangler dev --remote
 ```
 
+## WordPress plugin telemetry sink (`POST /_wp`)
+
+[`postio-uk/postio-wordpress`](https://github.com/postio-uk/postio-wordpress)
+pings this endpoint weekly with:
+
+```json
+{
+  "plugin_version": "0.1.0",
+  "wp_version": "6.7.1",
+  "php_version": "8.1.27",
+  "site_lang": "en-GB",
+  "active_builders": ["woocommerce", "wpforms-lite", "everest-forms"]
+}
+```
+
+Each payload writes one Analytics Engine data point per active
+builder (or one with `_none` if the array is empty), so SQL queries
+can aggregate install share by builder slug:
+
+```sql
+SELECT blob5 AS builder, count() AS pings
+FROM postio_wp_telemetry
+WHERE timestamp > NOW() - INTERVAL '7' DAY
+GROUP BY builder ORDER BY pings DESC;
+```
+
+Blob layout: `blob1=plugin_version, blob2=wp_version,
+blob3=php_version, blob4=site_lang, blob5=builder_slug`. Index =
+builder_slug.
+
+The endpoint is POST-only (other methods 405). Returns `204` on
+accept (including silently-filtered bad slugs), `400` on malformed
+JSON or missing `plugin_version`, `413` on bodies > 4KB. Never
+echoes a body.
+
+The plugin sends with a custom `User-Agent: Postio-WP/<version>` —
+no site URL ever reaches this Worker.
+
 ## Observability
 
 `observability.enabled = true` is set in `wrangler.toml` — Workers

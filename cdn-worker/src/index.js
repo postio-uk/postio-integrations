@@ -9,6 +9,12 @@
  *                              → exact pin. Cache: 1y immutable.
  *   /latest/<file>             → discouraged-but-supported. Same cache as /vN/.
  *
+ * Plus one POST-only endpoint:
+ *   POST /_wp                  → WordPress plugin telemetry sink. Writes
+ *                                to env.WP_TELEMETRY (Analytics Engine
+ *                                dataset). One data point per active
+ *                                builder per ping.
+ *
  * Anything else 404s. Always returns CORS `*` (these are public bundles).
  *
  * R2 binding: env.BUNDLES (configured in wrangler.toml). If the binding
@@ -127,17 +133,123 @@ function r2KeyFromPath(pathname) {
   return pathname.slice(1);
 }
 
+// ---------------------------------------------------------------------
+// WordPress plugin telemetry sink (POST /_wp)
+//
+// postio-uk/postio-wordpress pings weekly with:
+//   { plugin_version, wp_version, php_version, site_lang, active_builders[] }
+//
+// The plugin's settings disclosure promises no URLs, post titles, form
+// contents, API keys, or IP-derived data are sent. This handler only
+// reads the listed fields and writes them to Analytics Engine — no
+// other body fields are persisted.
+// ---------------------------------------------------------------------
+
+const WP_TELEMETRY_MAX_BODY = 4096;
+const WP_TELEMETRY_MAX_FIELD = 64;
+const WP_TELEMETRY_MAX_BUILDERS = 50;
+const WP_TELEMETRY_VERSION_RX = /^[A-Za-z0-9._\-+]+$/;
+
+function trimField(v) {
+  if (typeof v !== "string") return "";
+  // Strip control chars and cap length.
+  return v.replace(/[\x00-\x1f\x7f]/g, "").slice(0, WP_TELEMETRY_MAX_FIELD).trim();
+}
+
+function safeBuilderSlug(v) {
+  const s = trimField(v);
+  // Whitelist-style: lowercase a-z, 0-9, dash. Anything else is dropped
+  // — the WP plugin only ever sends slugs that match.
+  if (s.length === 0 || s.length > 40) return "";
+  if (!/^[a-z0-9-]+$/.test(s)) return "";
+  return s;
+}
+
+async function handleWpTelemetry(request, env) {
+  if (request.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: { allow: "POST", "access-control-allow-origin": "*" },
+    });
+  }
+  if (request.method !== "POST") {
+    return new Response("Method Not Allowed", {
+      status: 405,
+      headers: { allow: "POST", "access-control-allow-origin": "*" },
+    });
+  }
+
+  const cl = request.headers.get("content-length");
+  if (cl && Number(cl) > WP_TELEMETRY_MAX_BODY) {
+    return new Response(null, { status: 413 });
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return new Response(null, { status: 400 });
+  }
+  if (!body || typeof body !== "object") {
+    return new Response(null, { status: 400 });
+  }
+
+  const pluginVersion = trimField(body.plugin_version);
+  const wpVersion = trimField(body.wp_version);
+  const phpVersion = trimField(body.php_version);
+  const siteLang = trimField(body.site_lang);
+  const builders = Array.isArray(body.active_builders)
+    ? body.active_builders
+        .map(safeBuilderSlug)
+        .filter(Boolean)
+        .slice(0, WP_TELEMETRY_MAX_BUILDERS)
+    : [];
+
+  if (!pluginVersion || !WP_TELEMETRY_VERSION_RX.test(pluginVersion)) {
+    return new Response(null, { status: 400 });
+  }
+
+  if (!env.WP_TELEMETRY) {
+    // Binding missing — accept silently so the plugin doesn't retry.
+    return new Response(null, { status: 204 });
+  }
+
+  const baseBlobs = [pluginVersion, wpVersion, phpVersion, siteLang];
+
+  if (builders.length === 0) {
+    env.WP_TELEMETRY.writeDataPoint({
+      blobs: [...baseBlobs, "_none"],
+      indexes: ["_none"],
+    });
+  } else {
+    const dedup = Array.from(new Set(builders));
+    for (const builder of dedup) {
+      env.WP_TELEMETRY.writeDataPoint({
+        blobs: [...baseBlobs, builder],
+        indexes: [builder],
+      });
+    }
+  }
+
+  return new Response(null, { status: 204 });
+}
+
 export default {
   async fetch(request, env) {
+    const url = new URL(request.url);
+    const pathname = url.pathname;
+
+    // /_wp is POST-only — handle before the GET/HEAD gate below.
+    if (pathname === "/_wp") {
+      return handleWpTelemetry(request, env);
+    }
+
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: corsHeaders() });
     }
     if (request.method !== "GET" && request.method !== "HEAD") {
       return methodNotAllowed();
     }
-
-    const url = new URL(request.url);
-    const pathname = url.pathname;
 
     if (pathname === "/" || pathname === "") {
       return rootResponse();
