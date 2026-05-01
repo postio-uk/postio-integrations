@@ -15,17 +15,19 @@ routes = [
 # binding = "BUNDLES"
 # bucket_name = "postio-cdn-bundles"
 
-# Stage variant — for early validation. DNS for stage-cdn.postio.co.uk
-# needs adding (CNAME → postio.co.uk, orange-cloud) before the stage
-# route can bind. Explicit empty routes overrides the top-level
-# inheritance — without this, stage would grab cdn.postio.co.uk/*.
+[observability]
+enabled = true
+
+# Stage variant. DNS for stage-cdn.postio.co.uk is in place (CNAME →
+# postio.co.uk, orange-cloud). Explicit `routes` overrides the
+# top-level inheritance — without it, stage would also try to claim
+# cdn.postio.co.uk/* and conflict with prod.
 [env.stage]
 name = "postio-cdn-stage"
-routes = []
+routes = [
+  { pattern = "stage-cdn.postio.co.uk/*", zone_name = "postio.co.uk" }
+]
 
 # [[env.stage.r2_buckets]]
 # binding = "BUNDLES"
 # bucket_name = "postio-cdn-bundles-stage"
-
-[observability]
-enabled = true
