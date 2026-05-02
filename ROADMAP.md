@@ -112,14 +112,31 @@ Chrome Web Store, npm.
 
 ## Phase 2 — Server SDK fan-out
 
-Each opens a distinct framework community. Independent.
+Each opens a distinct framework community. Independent. **All five
+shipped 2026-05-02 at v0.1.0.** Common shape across all of them
+(typed errors, default retry policy, OIDC trusted publishing where
+the registry supports it) lives in [`SPEC.md` §4.6](./SPEC.md#46-server-sdks--fan-out-across-5-languages).
 
-- □ **Python** — `postio` on PyPI. Django / Flask / FastAPI.
-- □ **PHP** — `postio/postio` on Packagist. Laravel + raw PHP.
-- □ **.NET** — `Postio.Sdk` on NuGet. Dynamics 365, ASP.NET MVC,
-  enterprise UK.
-- □ **Go** — `github.com/postio-uk/postio-go`.
-- □ **Ruby** — last priority; weak demand signal.
+- ■ **Python** — [`postio` on PyPI](https://pypi.org/project/postio/).
+  Sync + async (`PostioClient` + `AsyncPostioClient`), Pydantic v2.
+  OIDC trusted publishing.
+- ■ **Go** — [`github.com/postio-uk/postio-go`](https://pkg.go.dev/github.com/postio-uk/postio-go).
+  Stdlib `net/http`, zero deps. Tag-driven publish via Go module proxy.
+- ■ **PHP** — [`postio/postio` on Packagist](https://packagist.org/packages/postio/postio).
+  Sync, Guzzle 7, readonly value objects.
+- ■ **Ruby** — [`postio` on RubyGems](https://rubygems.org/gems/postio).
+  Sync, stdlib `net/http`, `Data.define` value classes (Ruby 3.2+).
+  OIDC trusted publishing.
+- ■ **.NET** — [`Postio.Sdk` on NuGet](https://www.nuget.org/packages/Postio.Sdk).
+  Async-first (`Task<T>`), `HttpClient`, immutable `record`. .NET 8
+  LTS. OIDC trusted publishing via `NuGet/login@v1` token exchange.
+
+**Phase 2 follow-ups (unblocked by spec drift fix in postio-api):**
+
+- □ Once postio-api ships the `PhoneResult` spec/runtime alignment
+  (`isReachable: bool` + nullable fields not `required`), all five
+  SDKs drop their hand-applied patches in their respective model
+  files. Bump SDK minor versions and re-publish.
 
 ---
 

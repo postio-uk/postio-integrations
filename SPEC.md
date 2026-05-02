@@ -400,13 +400,43 @@ Versioning rule for `cdn.postio.co.uk`:
 - Every public file ships `"use client"` at the top. One-shot lookups
   on the server should use `@postio/core` directly.
 
-### 4.6 Server SDKs — Node
+### 4.6 Server SDKs — fan-out across 5 languages
 
-- `@postio/node`. Wraps `@postio/core` with Node-specific niceties
-  (timeouts, retries with jitter, request-scoped logger). Uses native
-  `fetch`. Targets Node 20+.
-- This is the **only Node-flavoured SDK**. Workers/Bun/Deno users
-  consume `@postio/core` directly.
+The JS-family SDK lives in this repo as `@postio/node`. Every other
+language ships from its own repo (per §3.1) and is published to its
+native registry. All five carry the **same public surface, default
+retry policy, typed error hierarchy, and metadata contract** (§9.6) —
+only the language idiom differs.
+
+| SDK | Repo | Registry | Sync / async | Toolchain |
+|---|---|---|---|---|
+| **Node** | `postio-uk/postio-integrations` (this repo) | `@postio/node` on npm | both via core's `fetch` | pnpm workspace |
+| **Python** | `postio-uk/postio-python` | [`postio` on PyPI](https://pypi.org/project/postio/) | both (`PostioClient` + `AsyncPostioClient`) | uv + Pydantic v2 |
+| **Go** | `postio-uk/postio-go` | `github.com/postio-uk/postio-go` (Go module proxy) | sync (callers use goroutines) | stdlib `net/http` only |
+| **PHP** | `postio-uk/postio-php` | [`postio/postio` on Packagist](https://packagist.org/packages/postio/postio) | sync | Composer + Guzzle 7 |
+| **Ruby** | `postio-uk/postio-ruby` | [`postio` on RubyGems](https://rubygems.org/gems/postio) | sync | stdlib `net/http`, `Data.define` value classes |
+| **.NET** | `postio-uk/postio-dotnet` | [`Postio.Sdk` on NuGet](https://www.nuget.org/packages/Postio.Sdk) | async-first (`Task<T>`) | .NET 8 LTS, `HttpClient`, immutable `record` |
+
+Common to all five:
+
+- **Typed exception hierarchy** keyed by HTTP status: `PostioException`
+  base + `InvalidKey` (401) / `OutOfCredit` (402) / `Forbidden` (403) /
+  `NotFound` (404) / `Validation` (400/422) / `RateLimit` (429,
+  `retry_after` populated) / `Server` (5xx) / `Timeout` /
+  `Connection`. Every error carries `status`, `error_code` (the API's
+  string), `details`, `request_id`, and the raw `envelope`.
+- **Default retry policy**: 2 retries on 408/409/429/5xx + network/
+  timeout, exponential backoff with full jitter (500 ms → 8 s cap).
+  Mirrors `@postio/node`.
+- **Live tests** in CI hit `stage-api.postio.co.uk` with a
+  `POSTIO_API_KEY_STAGE` repo secret. Master pushes only.
+- **Tag-driven releases** (`vX.Y.Z`). PyPI / RubyGems / NuGet use
+  **OIDC trusted publishing** — no long-lived publish tokens in
+  GH secrets. Go and Packagist are pull-based (Go module proxy /
+  Packagist webhook).
+
+Phase 2 status (as of 2026-05-02): **all five shipped at v0.1.0.**
+See `ROADMAP.md` for the next-up roadmap.
 
 ### 4.7 Docs surface — `.md` mirror, `llms.txt`, `claude.md`, `cursor.md`
 
