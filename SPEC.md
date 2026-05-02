@@ -491,6 +491,16 @@ order is independent of any platform plugin.
 ## 6. WordPress strategy — one plugin, not many
 
 **Decision: ship a single `postio-address-validation` plugin.**
+**Status (2026-05-02): v0.1 shipped to `postio-uk/postio-wordpress`
+on GitHub.** All eight detectors (WooCommerce block + classic, Gravity,
+CF7, WPForms, Fluent, Ninja, Forminator, Elementor Pro) wired, plus
+the Gutenberg block, custom-mappings settings UI, and weekly telemetry
+ping to `cdn.postio.co.uk/_wp`. CF7 / Ninja / Elementor opt in by
+class convention (`postio-line-1` etc., plus optional `postio-search`
+for a dedicated lookup field separate from line 1). Olly is in user
+manual UX testing on a `localhost:8888` wp-env install — circle back
+based on his feedback before WP.org SVN submission.
+
 
 - Detects which form builder / commerce plugin is active at runtime
   (WooCommerce, Gravity, CF7, WPForms, Fluent Forms, Ninja Forms,
@@ -589,10 +599,18 @@ these are accounting/ops tools, not address-capture surfaces.
 
 ### 9.3 Telemetry
 
-- Drop-in and SDKs emit anonymous load events (version, host platform,
-  bundle variant) to `cdn.postio.co.uk/_t` for adoption measurement.
-- Opt-out via `Postio.AddressFinder.setup({ telemetry: false })` in the
-  drop-in; SDK env var `POSTIO_TELEMETRY=0`.
+- **WordPress plugin** (shipped 2026-05-02): weekly
+  `POST cdn.postio.co.uk/_wp` from each install with plugin/WP/PHP
+  versions, site language, and the slugs of any active form-builder
+  plugins from a curated whitelist. Worker writes one CF Analytics
+  Engine data point per active builder so install share is
+  SQL-aggregatable. Plugin opt-out via Settings → Postio. Custom
+  `User-Agent: Postio-WP/<ver>` so no site URL leaks.
+- **Drop-in JS / SDKs** (planned): anonymous load events (version,
+  host platform, bundle variant) to `cdn.postio.co.uk/_t`. Opt-out
+  via `Postio.AddressFinder.setup({ telemetry: false })` in the
+  drop-in; SDK env var `POSTIO_TELEMETRY=0`. Drop-in v0.1 ships
+  without the `/_t` ping; revisit before drop-in GA.
 - We never log search inputs, results, or PII. Only assets-level
   metadata.
 
@@ -638,10 +656,10 @@ section bodies above and trimmed from this list.
    GPT Action manifest also shipped in `ai/gpt-action/` + served at
    `postio.co.uk/.well-known/ai-plugin.json`. All listed in
    `ai/listings.md` for community directory submission.
-5. **Telemetry transport** for drop-in JS / SDKs: confirm the
-   Workers-side endpoint and storage (probably DDB events table or a
-   CF Analytics Engine binding). Drop-in v0.1 ships without the `/_t`
-   ping; revisit before drop-in GA.
+5. **Telemetry transport** — partially resolved. WordPress plugin
+   shipped to `cdn.postio.co.uk/_wp` (Analytics Engine binding,
+   2026-05-02). Drop-in JS / SDK `/_t` endpoint still pending; same
+   pattern when it lands.
 6. **Make `postio-uk/postio-api` public** to re-enable
    `npm publish --provenance`. Worth doing if no sensitive code is in
    there. Audit first.

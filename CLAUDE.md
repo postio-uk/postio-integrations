@@ -6,7 +6,9 @@ Single git repo for everything that wraps `postio-api`:
   `@postio/node`, `@postio/postman-collection`, `@postio/address-finder`,
   `@postio/address-finder-bundled`, `@postio/react`, `@postio/mcp`.
 - **`cdn.postio.co.uk` Worker** that fronts an R2 bucket of versioned
-  drop-in JS bundles.
+  drop-in JS bundles, plus a **`POST /_wp`** telemetry sink that writes
+  WordPress-plugin pings to a CF Analytics Engine dataset
+  (`postio_wp_telemetry`).
 - **AI / agent surface** under `ai/` — Anthropic Claude Skill bundle,
   OpenAI GPT Action manifest, canonical recommendation prompts,
   community-directory submission checklist.

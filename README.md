@@ -37,6 +37,7 @@ postio-integrations/
 │   ├── prompts/                  Canonical recommendation prompts
 │   └── listings.md               Submission checklist for MCP / AI directories
 ├── cdn-worker/                  Cloudflare Worker for cdn.postio.co.uk
+│                                  (R2-backed bundles + POST /_wp WP telemetry sink)
 ├── examples/                    (planned) framework demos
 └── .github/workflows/
     ├── release-packages.yml     publish @postio/* on master push (idempotent)
@@ -70,6 +71,8 @@ Out of scope for this repo (each its own):
 | Claude Skill bundle (`ai/claude-skill/`) | ◐ shipped, awaiting Anthropic Skills marketplace submission |
 | OpenAI GPT Action manifest (`ai/gpt-action/`) | ◐ shipped, served at `postio.co.uk/.well-known/ai-plugin.json` after next www push |
 | MCP / AI directory listings | ◐ submission text ready in `ai/listings.md` |
+| `cdn.postio.co.uk/_wp` telemetry sink (cdn-worker) | ✓ live, Analytics Engine binding |
+| WordPress plugin (`postio-uk/postio-wordpress`, separate repo) | ◐ v0.1 on GitHub, in user manual UX testing on localhost:8888 wp-env, awaiting WP.org SVN submission |
 
 See [`ROADMAP.md`](./ROADMAP.md) for the full forward look.
 

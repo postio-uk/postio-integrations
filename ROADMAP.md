@@ -68,10 +68,14 @@ results, working in Cursor / Claude with first-class autocomplete.
 
 All independent. Pick whichever to ship first.
 
-- □ **WordPress unified plugin** — `postio-address-validation` on
-  WP.org. Detects WooCommerce + the major form builders (Gravity, CF7,
-  WPForms, Fluent, Ninja, Forminator, Elementor Forms). Block-editor
-  block included. See SPEC §6.
+- ◐ **WordPress unified plugin** — `postio-address-validation`. v0.1
+  shipped to `postio-uk/postio-wordpress` on GitHub (2026-05-02). All
+  eight detectors wired (WC block + classic, Gravity, CF7, WPForms,
+  Fluent, Ninja, Forminator, Elementor Pro), Gutenberg block,
+  custom-mappings UI, weekly telemetry to `cdn.postio.co.uk/_wp`.
+  Currently in user manual UX testing on a `localhost:8888` wp-env
+  install — awaiting feedback before WP.org SVN submission. See
+  SPEC §6.
 - □ **Shopify app** — Theme App Extension (storefront) + embedded
   admin (Remix template). Shopify App Store listing.
 - ■ **`@postio/mcp@0.1.0`** — Model Context Protocol server.
