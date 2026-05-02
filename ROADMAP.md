@@ -131,12 +131,20 @@ the registry supports it) lives in [`SPEC.md` §4.6](./SPEC.md#46-server-sdks--f
   Async-first (`Task<T>`), `HttpClient`, immutable `record`. .NET 8
   LTS. OIDC trusted publishing via `NuGet/login@v1` token exchange.
 
-**Phase 2 follow-ups (unblocked by spec drift fix in postio-api):**
+**Phase 2 follow-ups:**
 
-- □ Once postio-api ships the `PhoneResult` spec/runtime alignment
-  (`isReachable: bool` + nullable fields not `required`), all five
-  SDKs drop their hand-applied patches in their respective model
-  files. Bump SDK minor versions and re-publish.
+- ■ **PhoneResult spec/runtime alignment shipped.** postio-api 1.0.3
+  + `@postio/openapi@1.0.3` + `@postio/api-types@1.0.3` align the
+  spec with the runtime (`isReachable: boolean | null`; the runtime
+  always emits explicit nulls for every nullable field). All five
+  SDKs dropped their hand-applied patches:
+  [`postio==0.1.1`](https://pypi.org/project/postio/0.1.1/) ·
+  [`github.com/postio-uk/postio-go@v0.1.1`](https://pkg.go.dev/github.com/postio-uk/postio-go@v0.1.1) ·
+  [`postio/postio:0.1.2`](https://packagist.org/packages/postio/postio) ·
+  [`postio 0.1.1`](https://rubygems.org/gems/postio/versions/0.1.1) (RubyGems) ·
+  [`Postio.Sdk 0.1.1`](https://www.nuget.org/packages/Postio.Sdk/0.1.1)
+  (.NET). PHP shipped as 0.1.2 (0.1.1 was an aborted release;
+  changelog explains).
 
 ---
 
