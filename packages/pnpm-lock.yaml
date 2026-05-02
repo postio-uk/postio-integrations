@@ -77,8 +77,8 @@ importers:
   node:
     dependencies:
       '@postio/core':
-        specifier: 0.1.0
-        version: 0.1.0
+        specifier: workspace:^
+        version: link:../core
     devDependencies:
       typescript:
         specifier: ^5.9.3
@@ -319,9 +319,6 @@ packages:
 
   '@postio/api-types@1.0.2':
     resolution: {integrity: sha512-f6qxn5MHW+gCIpYBGug/27CWlDzXQolRTw4PhHzz4cYd2M9snt+bpRPoVd5MDCtDeoiy8kjruhCse/mDOrRKpQ==}
-
-  '@postio/core@0.1.0':
-    resolution: {integrity: sha512-kMCYXTHMZQQ00L9bV0fPGyx0OKvONlzGbEvfN4b2aAvv3QngmKa/PxW0B02kDyVkF2SnxN5AQdcRdC45QsKABw==}
 
   '@postio/openapi@1.0.2':
     resolution: {integrity: sha512-yLBc1INQRgtEQBn3dpVJiRk0d5Nt7tZgLZ1aPb9j4Fmnuzbb5ctjYLkhuz1bYcWNkzFX0ecfe6A4VIoTkne9kQ==}
@@ -1534,10 +1531,6 @@ snapshots:
       - supports-color
 
   '@postio/api-types@1.0.2': {}
-
-  '@postio/core@0.1.0':
-    dependencies:
-      '@postio/api-types': 1.0.2
 
   '@postio/openapi@1.0.2': {}
 
