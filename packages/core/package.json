@@ -1,6 +1,6 @@
 {
   "name": "@postio/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Runtime-agnostic typed client for the Postio API (Workers / Node / Bun / Deno / browser).",
   "license": "MIT",
   "type": "module",
@@ -37,15 +37,17 @@
     "uk",
     "address",
     "postcode",
-    "email",
-    "phone",
     "validation",
+    "address-validation",
+    "postcode-lookup",
+    "address-lookup",
     "paf",
     "royal-mail",
-    "client",
+    "ordnance-survey",
+    "email",
+    "phone",
     "sdk",
-    "typescript",
-    "fetch"
+    "typescript"
   ],
   "dependencies": {
     "@postio/api-types": "1.0.2"

@@ -31,16 +31,18 @@
   },
   "keywords": [
     "postio",
-    "openapi",
-    "openapi-3.1",
-    "types",
-    "typescript",
     "uk",
     "address",
     "postcode",
     "validation",
+    "address-validation",
     "paf",
-    "royal-mail"
+    "royal-mail",
+    "ordnance-survey",
+    "openapi",
+    "openapi-3.1",
+    "types",
+    "typescript"
   ],
   "devDependencies": {
     "@postio/openapi": "1.0.2",

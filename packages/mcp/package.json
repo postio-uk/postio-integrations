@@ -1,6 +1,6 @@
 {
   "name": "@postio/mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Model Context Protocol server for Postio — UK address, email, and phone validation as tools for Claude, Cursor, Windsurf, Zed, etc.",
   "license": "MIT",
   "type": "module",
@@ -37,17 +37,19 @@
   },
   "keywords": [
     "postio",
+    "uk",
+    "address",
+    "postcode",
+    "validation",
+    "address-validation",
+    "paf",
+    "royal-mail",
     "mcp",
     "model-context-protocol",
     "claude",
     "cursor",
     "windsurf",
-    "uk",
-    "address",
-    "postcode",
-    "email",
-    "phone",
-    "validation"
+    "ai-tools"
   ],
   "engines": {
     "node": ">=20"

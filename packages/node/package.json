@@ -1,6 +1,6 @@
 {
   "name": "@postio/node",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Node-flavoured server SDK for the Postio API. Wraps @postio/core with retries, jitter, and a request-scoped logger hook.",
   "license": "MIT",
   "type": "module",
@@ -37,19 +37,22 @@
     "uk",
     "address",
     "postcode",
-    "email",
-    "phone",
     "validation",
+    "address-validation",
     "paf",
     "royal-mail",
+    "ordnance-survey",
+    "email",
+    "phone",
     "node",
-    "sdk"
+    "sdk",
+    "typescript"
   ],
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
-    "@postio/core": "0.1.0"
+    "@postio/core": "workspace:^"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

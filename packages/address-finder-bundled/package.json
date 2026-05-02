@@ -1,7 +1,7 @@
 {
   "name": "@postio/address-finder-bundled",
-  "version": "1.0.1",
-  "description": "Pre-bundled drop-in build of @postio/address-finder. Loadable via <script> tag.",
+  "version": "1.0.2",
+  "description": "Drop-in UK address autocomplete for any website. Single <script> tag, no build step. Bundled distribution of @postio/address-finder.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/address-finder.js",
@@ -38,10 +38,14 @@
     "uk",
     "address",
     "postcode",
+    "validation",
+    "address-autocomplete",
+    "address-finder",
     "autocomplete",
     "drop-in",
     "cdn",
-    "bundle"
+    "bundle",
+    "script-tag"
   ],
   "devDependencies": {
     "@postio/address-finder": "workspace:*",

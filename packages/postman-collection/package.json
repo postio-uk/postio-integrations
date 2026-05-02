@@ -27,15 +27,17 @@
   },
   "keywords": [
     "postio",
-    "postman",
-    "postman-collection",
-    "openapi",
     "uk",
     "address",
     "postcode",
-    "email",
-    "phone",
-    "validation"
+    "validation",
+    "address-validation",
+    "paf",
+    "royal-mail",
+    "ordnance-survey",
+    "postman",
+    "postman-collection",
+    "openapi"
   ],
   "devDependencies": {
     "@postio/openapi": "1.0.2",

@@ -1,6 +1,6 @@
 {
   "name": "@postio/react",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "React hooks and components for the Postio API — UK address, email, and phone validation.",
   "license": "MIT",
   "type": "module",
@@ -34,15 +34,17 @@
   },
   "keywords": [
     "postio",
-    "react",
     "uk",
     "address",
     "postcode",
-    "email",
-    "phone",
     "validation",
+    "address-validation",
+    "address-autocomplete",
+    "autocomplete",
+    "combobox",
+    "react",
     "hooks",
-    "autocomplete"
+    "nextjs"
   ],
   "dependencies": {
     "@postio/address-finder": "workspace:^",

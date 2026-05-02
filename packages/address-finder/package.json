@@ -1,6 +1,6 @@
 {
   "name": "@postio/address-finder",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Drop-in UK address autocomplete — accessible combobox over the Postio API.",
   "license": "MIT",
   "type": "module",
@@ -37,12 +37,16 @@
     "uk",
     "address",
     "postcode",
+    "validation",
+    "address-validation",
+    "address-autocomplete",
+    "address-finder",
+    "address-lookup",
     "autocomplete",
     "combobox",
-    "address-finder",
-    "validation",
     "paf",
-    "royal-mail"
+    "royal-mail",
+    "ordnance-survey"
   ],
   "dependencies": {
     "@postio/core": "workspace:^"

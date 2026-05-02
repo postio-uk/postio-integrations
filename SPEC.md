@@ -630,6 +630,98 @@ these are accounting/ops tools, not address-capture surfaces.
 - Closed-source platform apps (Shopify private app code) ship without
   a `LICENSE` file in their repo and the repo stays private.
 
+### 9.6 Discoverability & metadata — keywords, descriptions, topics
+
+Every Postio-published package — across **npm, PyPI, Packagist, NuGet,
+RubyGems, the Go module proxy, WP.org, and the GitHub repo itself** —
+follows the same metadata contract. Discoverability isn't an
+afterthought; the registry's search ranking is the second-biggest
+acquisition channel for any SDK after install-share momentum.
+
+**Tier 1 — required on every Postio package** (5 terms; fits inside
+WP.org's hard-5 cap):
+
+```
+postio · uk · address · postcode · validation
+```
+
+These are the "find Postio at all" terms. Brand + geo + primary
+category. Skipping any of them is a bug.
+
+**Tier 2 — domain authority** (add 3–5 where genuinely relevant):
+
+```
+paf · royal-mail · ordnance-survey · address-validation ·
+postcode-lookup · address-lookup · uk-address · address-autocomplete
+```
+
+The hyphenated variants matter — search tokenisers split them
+differently from the unhyphenated ones, so the two forms hit different
+queries. Include both deliberately when the package warrants it.
+
+**Tier 3 — package-specific** (add only what's truly in scope):
+
+- Autocomplete widgets: `autocomplete`, `combobox`, `address-finder`,
+  `drop-in`, `cdn`, `script-tag`.
+- Server SDKs: `client`, `sdk`, `<language>` (e.g. `python`,
+  `typescript`), `<framework>` (e.g. `django`, `fastapi`, `laravel`).
+- WordPress: `woocommerce`, `gravity-forms`, `wpforms`,
+  `contact-form-7`, `block-checkout`.
+- AI surface: `mcp`, `model-context-protocol`, `claude`, `cursor`,
+  `windsurf`, `ai-tools`.
+- Email/phone: only on packages that actually expose those — don't
+  fake it.
+- API tooling: `openapi`, `openapi-3.1`, `postman`, `postman-collection`.
+
+Aim for ~10 keywords total. >15 looks spammy and modern registries
+penalise it.
+
+**Description template**
+
+```
+<core function> for <surface>. <one differentiator>.
+```
+
+Good (`@postio/node`): *"Node-flavoured server SDK for the Postio API.
+Wraps @postio/core with retries, jitter, and a request-scoped logger
+hook."* — 18 words, brand + category + differentiator.
+
+Pre-publish checklist for every package:
+- ≥3 Tier-1 terms appear naturally in the description.
+- Reads as English to a human, not as a keyword stuff.
+- Mentions registry-specific value where relevant (e.g. "for Django"
+  on Python, "for Laravel" on PHP — even though the SDK underneath is
+  one engine).
+
+**Per-registry caps + quirks**
+
+| Registry | Field | Cap | Notes |
+|---|---|---|---|
+| **npm** | `keywords[]` | none (~12) | feeds `npmjs.com` page + npm search + Google SERP |
+| **PyPI** | `keywords` + `classifiers[]` | none | classifiers are the controlled vocab faceted-search uses; always include `Topic :: Internet`, `License :: OSI Approved :: MIT License`, the Python version trove, `Operating System :: OS Independent` |
+| **Packagist** | `keywords[]` in `composer.json` | none (~10) | also reads README |
+| **NuGet** | `<PackageTags>` space-separated | ~15 | hard cap that matters |
+| **RubyGems** | no first-class keywords | n/a | SEO via `summary` + `description` + README + GH topics |
+| **Go module proxy** | none | n/a | discoverability is GH topics + godoc + README |
+| **WordPress.org** | `Tags:` in `readme.txt` | **hard 5** | beyond 5 is silently ignored |
+| **GitHub repo Topics** | repo settings | 20 | feeds GH search + Google SERP — set on every Postio repo |
+
+**Things we do NOT do**
+
+- **No competitor names** (`ideal-postcodes-alternative`,
+  `loqate-alternative`, etc.). Spam optics, dubious legal posture, low
+  conversion.
+- **No buzzwords** (`revolutionary`, `next-gen`, `ai-powered`).
+  Penalised by modern registries.
+- **No keyword stuffing** (>20). Quality > quantity.
+
+**GitHub topics**
+
+Every `postio-uk/*` repo carries up to 20 GH topics. Mirror Tier 1 +
+Tier 2 + repo-specific Tier 3, plus the language tag (`typescript`,
+`php`, etc.) for filtering on the org page. Set at repo creation time
+via `gh api repos/postio-uk/<repo>/topics --method PUT --field 'names[]=…'`.
+
 ---
 
 ## 10. Open questions / TODO
