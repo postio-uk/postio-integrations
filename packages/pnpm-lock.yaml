@@ -36,8 +36,8 @@ importers:
   api-types:
     devDependencies:
       '@postio/openapi':
-        specifier: 1.0.3
-        version: 1.0.3
+        specifier: 1.0.4
+        version: 1.0.4
       openapi-typescript:
         specifier: ^7.10.0
         version: 7.13.0(typescript@5.9.3)
@@ -323,8 +323,8 @@ packages:
   '@postio/openapi@1.0.2':
     resolution: {integrity: sha512-yLBc1INQRgtEQBn3dpVJiRk0d5Nt7tZgLZ1aPb9j4Fmnuzbb5ctjYLkhuz1bYcWNkzFX0ecfe6A4VIoTkne9kQ==}
 
-  '@postio/openapi@1.0.3':
-    resolution: {integrity: sha512-kaRmXJHjC13c7M2tNf79tbvfu7F10I0Q6VRU2FDje6EfXKxkC2kT2zJ+joOqTIQ2R5Xp4u17n0+Zl4PPv7Wkvg==}
+  '@postio/openapi@1.0.4':
+    resolution: {integrity: sha512-La5IDUtxgsg18jurTnp5ZfrAvPp8HU4NdlMRgn8dEvnh8UTvTsyYvthpzDau590bdcNtsCCDCas5nyDWtTh0VQ==}
 
   '@redocly/ajv@8.11.2':
     resolution: {integrity: sha512-io1JpnwtIcvojV7QKDUSIuMN/ikdOUd1ReEnUnMKGfDVridQZ31J0MmIuqwuRjWDZfmvr+Q0MqCcfHM2gTivOg==}
@@ -1537,7 +1537,7 @@ snapshots:
 
   '@postio/openapi@1.0.2': {}
 
-  '@postio/openapi@1.0.3': {}
+  '@postio/openapi@1.0.4': {}
 
   '@redocly/ajv@8.11.2':
     dependencies:

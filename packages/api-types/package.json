@@ -1,6 +1,6 @@
 {
   "name": "@postio/api-types",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "TypeScript types for the Postio API, generated from @postio/openapi.",
   "license": "MIT",
   "type": "module",
@@ -45,7 +45,7 @@
     "typescript"
   ],
   "devDependencies": {
-    "@postio/openapi": "1.0.3",
+    "@postio/openapi": "1.0.4",
     "openapi-typescript": "^7.10.0",
     "typescript": "^5.9.3"
   },
