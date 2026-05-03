@@ -45,6 +45,19 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  cli:
+    dependencies:
+      '@postio/node':
+        specifier: workspace:^
+        version: link:../node
+    devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.17
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   core:
     dependencies:
       '@postio/api-types':
