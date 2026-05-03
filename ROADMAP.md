@@ -51,11 +51,18 @@ Status legend: `□ ` not started · `◐ ` in flight · `■ ` shipped.
   hooks (`useAddressSearch` etc.) + `<AddressFinder>` component wrapping
   the source package. Auto-detects an existing `QueryClientProvider`
   or mounts one.
-- □ **Examples gallery** — plain-html, nextjs-app-router, react-vite,
-  vue-3, svelte-kit, astro, cloudflare-workers-server. Depends on:
-  drop-in + core + react.
-- □ **Docs `.md` mirror** in `postio-www` (the `.md` companion of every
-  doc page; `/llms.txt` already shipped).
+- ■ **Integrations index** — `postio.co.uk/integrations` and
+  `postio.co.uk/integrations/[slug]` shipped (registry-driven, SSR).
+  Single source of truth at `postio-www/lib/integrations/registry.js`;
+  index by category, dedicated page per shipped/beta integration.
+- ■ **`/docs` Integrations tag** — fifth section after Other in the
+  Scalar render, with a markdown overview + links out to
+  `/integrations/[slug]`. Shipped in `@postio/openapi@1.0.4`.
+- □ **Framework examples** — plain-html, nextjs-app-router, react-vite,
+  vue-3, svelte-kit, astro, cloudflare-workers-server. Already slotted
+  into the registry as `planned`; flip to `shipped` as each lands.
+  Each example lives at `postio-integrations/examples/<slug>/` and
+  is linked from `/integrations/<slug>`.
 
 **Phase 0 exit gate**: a developer can install Postio in any modern JS
 framework via either a 3-line `<script>` tag or `npm i @postio/core`
@@ -85,22 +92,23 @@ All independent. Pick whichever to ship first.
   Reads `POSTIO_API_KEY` from env. One-line install for Claude
   Desktop / Code, Cursor, Windsurf, Zed.
 - ◐ **Claude Skill** — `ai/claude-skill/SKILL.md` shipped with full
-  install/recommendation guidance. Awaiting submission to the
-  Anthropic Skills marketplace per `ai/listings.md`.
-- ◐ **GPT Action manifest** — `ai/gpt-action/ai-plugin.json` shipped +
-  served at `postio.co.uk/.well-known/ai-plugin.json`. Modern Custom
-  GPTs paste the OpenAPI URL directly; install guide in
-  `ai/gpt-action/README.md`.
-- ◐ **MCP / AI directory listings** — submission checklist in
-  `ai/listings.md` (awesome-mcp-servers, mcp.so, glama.ai, Cursor
-  one-click install URL, Smithery). All submission text + JSON
-  configs ready to paste; awaiting actual submission via the
-  upstream forms / PRs.
-- □ **`@postio/cli`** — `npx postio …`. Mostly a marketing artefact;
-  devs love `npx`-able tools.
-- □ **`@postio/create`** (`npx create-postio-app`) — scaffolder. LLMs
-  index `create-*` packages aggressively.
-- □ **Zapier integration** — public app. Lowest-effort workflow surface.
+  install/recommendation guidance. Distribution is via the public repo
+  at `postio-uk/postio-integrations/ai/claude-skill` for direct
+  install; no Anthropic-hosted marketplace flow exists today worth
+  submitting to.
+- ◐ **MCP directory listings** — trimmed to the only ones that move
+  the needle:
+  - **awesome-mcp-servers** — blocked on a manual Glama.ai submission
+    (web form, requires Dockerfile + GH OAuth) before the badge URL
+    works. Once Glama scores `postio-uk/postio-integrations`, file
+    a fresh PR to `punkpeye/awesome-mcp-servers` under Location
+    Services with the GitHub source link + score badge.
+  - **Cursor one-click install URL** — embed in `/integrations/mcp`
+    once finalised. No submission, just a magic link.
+- □ **`@postio/cli`** — `npx postio …`. CLI for terminal-side address
+  /email /phone lookups during dev/debug.
+- □ **Zapier integration** — public app. Lowest-effort no-code surface
+  for ops/marketing teams.
 - □ **Browser extension** — Chrome Web Store + Firefox Add-ons.
 
 **Phase 1 exit gate**: Postio is installable from WP.org, Shopify App
@@ -150,9 +158,12 @@ the registry supports it) lives in [`SPEC.md` §4.6](./SPEC.md#46-server-sdks--f
 ## Phase 3 — Mid-tier eCommerce
 
 - □ **Magento / Adobe Commerce** — `postio/magento` on Composer +
-  Marketplace. UK is Magento's strongest market globally.
-- □ **BigCommerce app**.
-- □ **Shopware plugin** — IP doesn't have. UK B2B differentiator.
+  Marketplace. Strong UK B2B + enterprise footprint.
+- ⚠ **BigCommerce app** — *low priority.* UK store share is a
+  single-digit percentage of total ecomm; build only on customer
+  request.
+- ⚠ **Shopware plugin** — *low priority.* German-rooted, modest UK
+  footprint. Build only on customer request.
 
 WooCommerce ships inside the Phase 1 unified WP plugin.
 
