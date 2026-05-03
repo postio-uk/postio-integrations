@@ -8,91 +8,32 @@
 
 ---
 
-## 1. Strategic frame
+## 1. Why this layer exists
 
-### 1.1 Why integrations are the acquisition channel
-
-The core API is undifferentiated as a SKU — every UK address vendor has
-"the same" data feed (Royal Mail PAF + OS) and broadly comparable accuracy.
-What differs is **how easy is it to drop into the developer's existing
-stack**. Integrations are the install surface. They are also a recurring
-SEO surface: every plugin directory listing, every npm `README`, every
-.md-suffixed doc page is a permanent acquisition asset that an LLM or a
-search engine can index forever.
+The Postio API is a single HTTP surface for UK address, email, and
+phone validation. This repo is everything that sits **above** that
+API: the JS-family npm packages, the drop-in browser bundle on
+`cdn.postio.co.uk`, the AI / agent surface (MCP server, Claude Skill,
+GPT Action manifest, llms.txt), and the build pipeline that ships
+them. Per-language server SDKs and per-platform plugins (WordPress,
+Shopify, etc.) live in their own repos for toolchain reasons; the
+contracts they share live here.
 
 Order of leverage, highest first:
 
-1. **The drop-in JS bundle and the npm core** — every other web-facing
-   integration is downstream of these two artefacts. A WordPress plugin
-   is fundamentally `<script src=postio>` plus a few hooks. Get this
-   layer right and ten downstream integrations become 100 lines of
-   glue each.
+1. **The browser SDK and the npm core** — every web-facing integration
+   is downstream of these. Get them right and downstream platform
+   plugins become small glue layers.
 2. **The OpenAPI spec → generated typed clients** — every server SDK
-   generates from this. One source of truth, N publish targets.
-3. **The AI/agent surface** — MCP server, Claude Skill, llms.txt,
-   `.md`-suffixed docs. This is where 2026 buyer journeys actually
-   start. Being the canonical answer in a coding-agent's recommendation
-   set is worth more than five WordPress plugin listings.
-4. **The platform plugins** — Shopify/WooCommerce/Magento/etc. are the
-   conversion-mode acquisition. The customer is already on the platform
-   and shopping the marketplace.
-5. **The CRM connectors** — long sales cycle, low volume, mostly a
-   credibility play. Defer until inbound demand surfaces.
-
-### 1.2 Who we're competing with — and what they actually ship
-
-The marketing-page comparison is misleading. The competitors' real code
-footprint is much smaller than their integrations page suggests.
-
-**Ideal Postcodes** (`github.com/ideal-postcodes`, ~31 public repos):
-
-- Drop-in JS: `address-finder-bundled` and `core-browser-bundled`,
-  shipped via **jsDelivr only**. Recommended snippet uses
-  `cdn.jsdelivr.net/npm/@ideal-postcodes/address-finder-bundled`.
-- Client lib taxonomy: `core-interface` (types) +
-  `core-browser` / `core-node` / `core-axios` (transports). Good pattern.
-- Platform plugins on GitHub: only **Magento** and **OpenCart** are
-  open-source. Everything else (Shopify, WooCommerce, Salesforce, etc.)
-  is private code maintained behind their docs site.
-- Server SDKs: only **Node** is alive. The Ruby SDK hasn't seen a
-  commit since 2021. **No** Python, PHP, .NET, or Go SDK exists.
-- WordPress: a single unified plugin, *UK Address Postcode Validation*,
-  with **~700 active installs** — much smaller than the per-form-builder
-  install bases (CF7 5M+, WPForms 6M+).
-- AI: they ship `llms.txt` and `.md`-suffixed doc URLs. Their `skills`
-  GitHub repo (registered Apr 2026) is **empty** — the name is squatted
-  but no Skill has shipped.
-- They run **postcodes.io** (1.4k GH stars) as an open postcode/geo API
-  that doubles as a brand halo.
-
-**Other UK incumbents** worth a glance, all weaker on developer surface
-than IP:
-
-- **Loqate / PCA Predict** — enterprise-priced, JS finder is closed
-  source, the ecosystem is built around their `loqate.js` tag and
-  Salesforce-/Dynamics-first plugins.
-- **getAddress.io** — cheaper than IP, ships JS + Node SDK + a few WP
-  plugins. Smaller GitHub org, no AI surface to speak of.
-- **Royal Mail's own API** — direct PAF licensee but raw HTTP only, no
-  drop-in, no plugins.
-- **Fetchify (formerly CraftyClicks)** — JS finder + WP plugin + Shopify
-  app. Lightweight integration footprint.
-
-The honest read: **none of the incumbents have built a 2026-shaped
-integration layer.** They have accumulated plugins over a decade. The
-AI/agent surface, the typed-everywhere SDK matrix, the
-generated-from-OpenAPI client family — those are all open ground.
-
-### 1.3 Posture: aggressive on foundations, ruthless on platforms
-
-- Build the foundation and AI surface to a higher quality bar than any
-  incumbent.
-- For platforms, only ship into stores where the **listing itself**
-  generates traffic (WP.org plugin directory, Shopify App Store, Magento
-  Marketplace, npm, PyPI). A plugin nobody installs is pure maintenance
-  burden.
-- Don't replicate the long-tail museum (ShopWired, OpenCart, Sage,
-  Quickbooks, Really Simple Systems) until a customer asks for it.
+   generates from one source of truth.
+3. **The AI / agent surface** — MCP server, Claude Skill, llms.txt,
+   `.md`-suffixed docs. The 2026 buyer journey for many devs starts
+   inside a coding agent.
+4. **The platform plugins** — Shopify, WooCommerce, Magento. The
+   marketplace listing itself generates traffic; ship into stores
+   where the listing earns its keep.
+5. **The CRM connectors** — long sales cycle, low volume; defer until
+   inbound demand surfaces.
 
 ---
 
@@ -157,8 +98,7 @@ across all the satellite repos.
 
 ### 3.2 Naming
 
-- npm scope: **`@postio`** ✓ owned. (Earlier draft assumed it was
-  taken — turned out to be Olly's own org from a prior signup.)
+- npm scope: **`@postio`** ✓ owned.
 - PyPI: **`postio`** ✓ owned (top-level, plus future **`postio-*`** sub-packages).
 - Packagist: **`postio`** vendor ✓ owned (e.g. **`postio/postio`**, **`postio/<feature>`**).
 - NuGet: **`Postio`** prefix ✓ owned (e.g. **`Postio.Sdk`**, **`Postio.<Feature>`**).
@@ -527,9 +467,8 @@ CF7, WPForms, Fluent, Ninja, Forminator, Elementor Pro) wired, plus
 the Gutenberg block, custom-mappings settings UI, and weekly telemetry
 ping to `cdn.postio.co.uk/_wp`. CF7 / Ninja / Elementor opt in by
 class convention (`postio-line-1` etc., plus optional `postio-search`
-for a dedicated lookup field separate from line 1). Olly is in user
-manual UX testing on a `localhost:8888` wp-env install — circle back
-based on his feedback before WP.org SVN submission.
+for a dedicated lookup field separate from line 1). The plugin is in
+user manual UX testing ahead of WP.org SVN submission.
 
 
 - Detects which form builder / commerce plugin is active at runtime

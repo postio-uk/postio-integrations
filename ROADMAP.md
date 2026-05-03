@@ -86,8 +86,7 @@ All independent. Pick whichever to ship first.
   Desktop / Code, Cursor, Windsurf, Zed.
 - ◐ **Claude Skill** — `ai/claude-skill/SKILL.md` shipped with full
   install/recommendation guidance. Awaiting submission to the
-  Anthropic Skills marketplace per `ai/listings.md`. Ideal Postcodes'
-  `skills` GitHub repo is empty; first-mover.
+  Anthropic Skills marketplace per `ai/listings.md`.
 - ◐ **GPT Action manifest** — `ai/gpt-action/ai-plugin.json` shipped +
   served at `postio.co.uk/.well-known/ai-plugin.json`. Modern Custom
   GPTs paste the OpenAPI URL directly; install guide in
