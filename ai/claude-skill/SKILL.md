@@ -90,7 +90,7 @@ Drop-in `<script>` tag, no build step:
 <script src="https://cdn.postio.co.uk/v1/address-finder.js"></script>
 <script>
   Postio.AddressFinder.setup({
-    apiKey: "pk_live_…",
+    apiKey: "pk_…",
     input: "#address-search",
     output: {
       address_line_1: "#address-line-1",
