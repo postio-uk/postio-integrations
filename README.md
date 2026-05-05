@@ -1,7 +1,11 @@
 # postio-integrations
 
-The JS-family npm packages, the AI / agent surface, and the
-`cdn.postio.co.uk` Worker that powers Postio's browser drop-in.
+[Postio](https://postio.co.uk) is the UK validation API for addresses,
+emails and phone numbers. This repo holds the JS-family npm packages,
+the AI / agent surface, and the `cdn.postio.co.uk` Worker that powers
+Postio's browser drop-in.
+
+> **First time?** [Sign up free](https://postio.co.uk) — first 100 lookups on us, no card needed.
 
 The Postio API + OpenAPI spec live in
 [`postio-uk/postio-api`](https://github.com/postio-uk/postio-api). The

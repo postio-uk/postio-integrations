@@ -1,7 +1,10 @@
 # @postio/address-finder
 
-Drop-in UK address autocomplete. Accessible combobox over the
-[Postio API](https://postio.co.uk).
+Drop-in UK address autocomplete — accessible combobox over
+[Postio](https://postio.co.uk), the UK validation API for addresses,
+emails and phone numbers.
+
+> **First time?** [Sign up free](https://postio.co.uk) — first 100 lookups on us, no card needed.
 
 This is the **source** package — for use with bundlers (Vite, Webpack,
 esbuild, Rollup, Next.js, etc.). For a script-tag drop-in with no
@@ -28,7 +31,7 @@ npm install @postio/address-finder
 import { setup } from "@postio/address-finder";
 
 const finder = setup({
-  apiKey: "pk_live_…",
+  apiKey: "pk_…",
   input: "#address-search",
   output: {
     address_line_1: "#address-line-1",

@@ -1,9 +1,12 @@
 # @postio/postman-collection
 
-The [Postio](https://postio.co.uk) API as a
+[Postio](https://postio.co.uk) — the UK validation API for addresses,
+emails and phone numbers — as a
 [Postman v2.1 collection](https://schema.postman.com/json/collection/v2.1.0/collection.json),
 generated from
 [`@postio/openapi`](https://www.npmjs.com/package/@postio/openapi).
+
+> **First time?** [Sign up free](https://postio.co.uk) — first 100 lookups on us, no card needed.
 
 Two ways to use it.
 

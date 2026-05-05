@@ -52,6 +52,23 @@ Other packages have independent SemVer; bump
   `packages/address-finder*/**`, builds the bundled package and
   uploads to the CDN's R2 bucket.
 
+## Public copy — canonical Postio one-liner
+
+Whenever a README, package description, or other public-facing surface
+needs a "what is Postio" sentence, use this canonical line verbatim:
+
+> Postio is the UK validation API for addresses, emails and phone numbers.
+> Sign up free — first 100 lookups on us, no card needed.
+
+In markdown contexts, wrap "Sign up free" as a link to
+`https://postio.co.uk`. The aim is consistency wherever a prospective
+user might land — npm pages, GitHub READMEs, Packagist, PyPI, RubyGems,
+NuGet, pkg.go.dev, the OpenAPI spec `info.description`.
+
+Don't paraphrase locally. If the line doesn't fit a particular surface,
+flag it so the canonical wording can be updated centrally — then
+propagate the new version to every surface in one pass.
+
 ## What does NOT live here
 
 - The OpenAPI spec source — that's in `postio-uk/postio-api`,

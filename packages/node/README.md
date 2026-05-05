@@ -1,9 +1,11 @@
 # @postio/node
 
-Server-side SDK for the [Postio](https://postio.co.uk) API — UK
-address, email, and phone validation. Wraps
+Server-side SDK for [Postio](https://postio.co.uk) — the UK validation
+API for addresses, emails and phone numbers. Wraps
 [`@postio/core`](https://www.npmjs.com/package/@postio/core) with
 retries (exp backoff + full jitter) and an optional structured logger.
+
+> **First time?** [Sign up free](https://postio.co.uk) — first 100 lookups on us, no card needed.
 
 If you're building in the browser, a Cloudflare Worker, Bun, or Deno —
 use [`@postio/core`](https://www.npmjs.com/package/@postio/core) directly.

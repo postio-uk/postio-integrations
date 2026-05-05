@@ -1,9 +1,13 @@
 # @postio/address-finder-bundled
 
 Pre-bundled drop-in build of
-[`@postio/address-finder`](https://www.npmjs.com/package/@postio/address-finder).
-Use this when you don't want a build step — drop a `<script>` tag in,
+[`@postio/address-finder`](https://www.npmjs.com/package/@postio/address-finder)
+— the UK address autocomplete for [Postio](https://postio.co.uk), the
+UK validation API for addresses, emails and phone numbers. Use this
+package when you don't want a build step: drop a `<script>` tag in,
 configure, done.
+
+> **First time?** [Sign up free](https://postio.co.uk) — first 100 lookups on us, no card needed.
 
 For bundler-based projects, use `@postio/address-finder` directly.
 For React, use `@postio/react`.
@@ -19,7 +23,7 @@ For React, use `@postio/react`.
 <script src="https://cdn.postio.co.uk/v1/address-finder.js"></script>
 <script>
   Postio.AddressFinder.setup({
-    apiKey: "pk_live_…",
+    apiKey: "pk_…",
     input: "#address-search",
     output: {
       address_line_1: "#address-line-1",
@@ -52,7 +56,7 @@ The same artefact is on npm, so it's auto-mirrored:
 ```html
 <script type="module">
   import { setup } from "https://cdn.postio.co.uk/v1/address-finder.esm.js";
-  setup({ apiKey: "pk_live_…", input: "#search", output: { /* … */ } });
+  setup({ apiKey: "pk_…", input: "#search", output: { /* … */ } });
 </script>
 ```
 

@@ -1,7 +1,10 @@
 # @postio/cli
 
-Postio command-line interface — UK address, email, and phone validation
-from your terminal.
+Command-line interface for [Postio](https://postio.co.uk) — the UK
+validation API for addresses, emails and phone numbers, from your
+terminal.
+
+> **First time?** [Sign up free](https://postio.co.uk) — first 100 lookups on us, no card needed.
 
 ```bash
 npx -y @postio/cli address postcode SW1A1AA
@@ -25,10 +28,10 @@ Requires Node 20+.
 Set your Postio API key in the environment:
 
 ```bash
-export POSTIO_API_KEY=pk_live_…
+export POSTIO_API_KEY=pk_…
 ```
 
-Or pass `--api-key pk_live_…` on each invocation.
+Or pass `--api-key pk_…` on each invocation.
 
 Get a key at https://postio.co.uk/dashboard/api-keys.
 

@@ -1,7 +1,9 @@
 # @postio/core
 
-Runtime-agnostic typed client for the [Postio](https://postio.co.uk)
-API — UK address, email, and phone validation.
+Runtime-agnostic typed client for [Postio](https://postio.co.uk) — the
+UK validation API for addresses, emails and phone numbers.
+
+> **First time?** [Sign up free](https://postio.co.uk) — first 100 lookups on us, no card needed.
 
 Works in Node 20+, modern browsers, Cloudflare Workers, Deno, and Bun.
 Uses the platform's native `fetch`. Returns the API envelope unchanged
@@ -37,7 +39,7 @@ await postio.connect();
 
 ```ts
 new Postio({
-  apiKey: "pk_live_…",
+  apiKey: "pk_…",
   baseUrl: "https://api.postio.co.uk/v1", // default
   timeoutMs: 10_000,                       // default
   fetch: customFetch,                      // override (e.g. tests, proxy)

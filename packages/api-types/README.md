@@ -1,7 +1,9 @@
 # @postio/api-types
 
-TypeScript types for the [Postio](https://postio.co.uk) API — UK
-address, email, and phone validation.
+TypeScript types for [Postio](https://postio.co.uk) — the UK validation
+API for addresses, emails and phone numbers.
+
+> **First time?** [Sign up free](https://postio.co.uk) — first 100 lookups on us, no card needed.
 
 Generated from [`@postio/openapi`](https://www.npmjs.com/package/@postio/openapi)
 via [`openapi-typescript`](https://github.com/openapi-ts/openapi-typescript).

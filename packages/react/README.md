@@ -1,7 +1,9 @@
 # @postio/react
 
-React hooks and components for the [Postio](https://postio.co.uk) API
-— UK address, email, and phone validation.
+React hooks and components for [Postio](https://postio.co.uk) — the UK
+validation API for addresses, emails and phone numbers.
+
+> **First time?** [Sign up free](https://postio.co.uk) — first 100 lookups on us, no card needed.
 
 Built on [TanStack Query](https://tanstack.com/query) for caching and
 request deduplication. Compatible with Next.js (App + Pages router),

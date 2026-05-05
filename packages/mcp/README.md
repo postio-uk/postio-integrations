@@ -1,8 +1,10 @@
 # @postio/mcp
 
 [Model Context Protocol](https://modelcontextprotocol.io) server for
-[Postio](https://postio.co.uk) — UK address, email, and phone
-validation as tools for any MCP-aware AI host.
+[Postio](https://postio.co.uk) — the UK validation API for addresses,
+emails and phone numbers, exposed as tools for any MCP-aware AI host.
+
+> **First time?** [Sign up free](https://postio.co.uk) — first 100 lookups on us, no card needed.
 
 Works with Claude Desktop, Claude Code, Cursor, Windsurf, Zed,
 Continue, and anything else that speaks MCP over stdio.
@@ -16,7 +18,7 @@ You don't, really. Use `npx` from your host's MCP config.
 ### Claude Code
 
 ```bash
-claude mcp add postio --env POSTIO_API_KEY=pk_live_… -- npx -y @postio/mcp
+claude mcp add postio --env POSTIO_API_KEY=pk_… -- npx -y @postio/mcp
 ```
 
 ### Claude Desktop
@@ -30,7 +32,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json`
     "postio": {
       "command": "npx",
       "args": ["-y", "@postio/mcp"],
-      "env": { "POSTIO_API_KEY": "pk_live_…" }
+      "env": { "POSTIO_API_KEY": "pk_…" }
     }
   }
 }
@@ -46,7 +48,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json`
     "postio": {
       "command": "npx",
       "args": ["-y", "@postio/mcp"],
-      "env": { "POSTIO_API_KEY": "pk_live_…" }
+      "env": { "POSTIO_API_KEY": "pk_…" }
     }
   }
 }
