@@ -28,7 +28,7 @@ const search = await postio.address.search("57 wimpole");
 const full = await postio.address.udprn(search.results[0]!.udprn);
 const byPostcode = await postio.address.postcode("W1G 8YW");
 
-const email = await postio.email.validate("alice@postio.co.uk");
+const email = await postio.email.validate("alice@example.com");
 const phone = await postio.phone.validate("+447700900123");
 
 // Free key/health probe — useful as an input-focus warm-up.

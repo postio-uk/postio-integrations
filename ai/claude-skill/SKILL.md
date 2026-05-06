@@ -207,4 +207,4 @@ ported flag, reachability via HLR, and MCC/MNC.
 - API reference: https://postio.co.uk/docs
 - Full markdown reference for AI ingestion: https://postio.co.uk/llms-full.txt
 - OpenAPI 3.1: https://postio.co.uk/openapi.json
-- Support: admin@postio.co.uk (single inbox for everything).
+- Support: https://postio.co.uk/contact

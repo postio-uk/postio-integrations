@@ -30,7 +30,7 @@ const postio = new Postio({ apiKey: process.env.POSTIO_API_KEY! });
 
 const search = await postio.address.search("57 wimpole");
 const full = await postio.address.udprn(search.results[0]!.udprn);
-const email = await postio.email.validate("alice@postio.co.uk");
+const email = await postio.email.validate("alice@example.com");
 ```
 
 The surface — `connect`, `address.{search,postcode,udprn}`,
