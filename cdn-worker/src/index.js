@@ -28,11 +28,13 @@ const MAJOR_PATH = /^\/v(\d+)\//;
 const LATEST_PATH = /^\/latest\//;
 
 function corsHeaders() {
+  // No `vary: origin` — we always return `*`, so a single cached response is
+  // valid for every origin. Setting `vary: origin` would fragment the edge
+  // cache by the request's Origin header for no benefit.
   return {
     "access-control-allow-origin": "*",
     "access-control-allow-methods": "GET, HEAD, OPTIONS",
     "access-control-max-age": "86400",
-    "vary": "origin",
   };
 }
 
@@ -235,7 +237,7 @@ async function handleWpTelemetry(request, env) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const pathname = url.pathname;
 
@@ -277,6 +279,18 @@ export default {
       );
     }
 
+    // Workers bypass the default CF edge cache, so we explicitly check
+    // caches.default before each R2 round-trip. Cache key is GET-normalised
+    // so HEAD requests share entries with GETs.
+    const cache = caches.default;
+    const cacheKey = new Request(url.toString(), { method: "GET" });
+    const cached = await cache.match(cacheKey);
+    if (cached) {
+      return request.method === "HEAD"
+        ? new Response(null, { status: cached.status, headers: cached.headers })
+        : cached;
+    }
+
     const key = r2KeyFromPath(pathname);
     const obj = await env.BUNDLES.get(key);
     if (!obj) {
@@ -291,9 +305,12 @@ export default {
     if (obj.httpEtag) headers.set("etag", obj.httpEtag);
     if (obj.uploaded) headers.set("last-modified", obj.uploaded.toUTCString());
 
+    const response = new Response(obj.body, { headers });
+    ctx.waitUntil(cache.put(cacheKey, response.clone()));
+
     if (request.method === "HEAD") {
       return new Response(null, { headers });
     }
-    return new Response(obj.body, { headers });
+    return response;
   },
 };
