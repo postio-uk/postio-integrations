@@ -1,6 +1,6 @@
 {
   "name": "@postio/mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Model Context Protocol server for Postio — UK address, email, and phone validation as tools for Claude, Cursor, Windsurf, Zed, etc.",
   "license": "MIT",
   "type": "module",

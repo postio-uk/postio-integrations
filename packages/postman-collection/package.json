@@ -1,6 +1,6 @@
 {
   "name": "@postio/postman-collection",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Postio API as a Postman v2.1 collection, generated from @postio/openapi.",
   "license": "MIT",
   "main": "./dist/postio.postman_collection.json",
@@ -40,7 +40,7 @@
     "openapi"
   ],
   "devDependencies": {
-    "@postio/openapi": "1.0.2",
+    "@postio/openapi": "1.1.0",
     "openapi-to-postmanv2": "^6.0.1"
   },
   "publishConfig": {

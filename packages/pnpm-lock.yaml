@@ -36,8 +36,8 @@ importers:
   api-types:
     devDependencies:
       '@postio/openapi':
-        specifier: 1.0.4
-        version: 1.0.4
+        specifier: 1.1.0
+        version: 1.1.0
       openapi-typescript:
         specifier: ^7.10.0
         version: 7.13.0(typescript@5.9.3)
@@ -61,8 +61,8 @@ importers:
   core:
     dependencies:
       '@postio/api-types':
-        specifier: 1.0.2
-        version: 1.0.2
+        specifier: workspace:^
+        version: link:../api-types
     devDependencies:
       typescript:
         specifier: ^5.9.3
@@ -100,8 +100,8 @@ importers:
   postman-collection:
     devDependencies:
       '@postio/openapi':
-        specifier: 1.0.2
-        version: 1.0.2
+        specifier: 1.1.0
+        version: 1.1.0
       openapi-to-postmanv2:
         specifier: ^6.0.1
         version: 6.0.1
@@ -330,14 +330,8 @@ packages:
       '@cfworker/json-schema':
         optional: true
 
-  '@postio/api-types@1.0.2':
-    resolution: {integrity: sha512-f6qxn5MHW+gCIpYBGug/27CWlDzXQolRTw4PhHzz4cYd2M9snt+bpRPoVd5MDCtDeoiy8kjruhCse/mDOrRKpQ==}
-
-  '@postio/openapi@1.0.2':
-    resolution: {integrity: sha512-yLBc1INQRgtEQBn3dpVJiRk0d5Nt7tZgLZ1aPb9j4Fmnuzbb5ctjYLkhuz1bYcWNkzFX0ecfe6A4VIoTkne9kQ==}
-
-  '@postio/openapi@1.0.4':
-    resolution: {integrity: sha512-La5IDUtxgsg18jurTnp5ZfrAvPp8HU4NdlMRgn8dEvnh8UTvTsyYvthpzDau590bdcNtsCCDCas5nyDWtTh0VQ==}
+  '@postio/openapi@1.1.0':
+    resolution: {integrity: sha512-1te+yWzoEynsAuJ4TCMzslrb0BHYrPG7OAU/j1oWzhfC/Dm+56xJWl4dh6qljMf92LThr1WIxiSiVN5K1bjDgg==}
 
   '@redocly/ajv@8.11.2':
     resolution: {integrity: sha512-io1JpnwtIcvojV7QKDUSIuMN/ikdOUd1ReEnUnMKGfDVridQZ31J0MmIuqwuRjWDZfmvr+Q0MqCcfHM2gTivOg==}
@@ -1546,11 +1540,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@postio/api-types@1.0.2': {}
-
-  '@postio/openapi@1.0.2': {}
-
-  '@postio/openapi@1.0.4': {}
+  '@postio/openapi@1.1.0': {}
 
   '@redocly/ajv@8.11.2':
     dependencies:

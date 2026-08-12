@@ -1,6 +1,6 @@
 {
   "name": "@postio/react",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "React hooks and components for the Postio API — UK address, email, and phone validation.",
   "license": "MIT",
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "@postio/core",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Runtime-agnostic typed client for the Postio API (Workers / Node / Bun / Deno / browser).",
   "license": "MIT",
   "type": "module",
@@ -50,7 +50,7 @@
     "typescript"
   ],
   "dependencies": {
-    "@postio/api-types": "1.0.2"
+    "@postio/api-types": "workspace:^"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

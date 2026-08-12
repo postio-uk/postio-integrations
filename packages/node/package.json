@@ -1,6 +1,6 @@
 {
   "name": "@postio/node",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Node-flavoured server SDK for the Postio API. Wraps @postio/core with retries, jitter, and a request-scoped logger hook.",
   "license": "MIT",
   "type": "module",
