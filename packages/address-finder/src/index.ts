@@ -28,7 +28,6 @@ export type AddressField =
   | "po_box"
   | "delivery_point_suffix"
   | "country"
-  | "county"
   | "district"
   | "ward"
   | "latitude"

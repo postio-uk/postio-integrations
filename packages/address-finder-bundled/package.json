@@ -1,6 +1,6 @@
 {
   "name": "@postio/address-finder-bundled",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Drop-in UK address autocomplete for any website. Single <script> tag, no build step. Bundled distribution of @postio/address-finder.",
   "license": "MIT",
   "type": "module",

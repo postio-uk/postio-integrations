@@ -1,6 +1,6 @@
 {
   "name": "@postio/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Postio command-line interface — UK address, email, and phone validation from your terminal. `npx postio …`.",
   "license": "MIT",
   "type": "module",

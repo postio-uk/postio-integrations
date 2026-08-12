@@ -66,7 +66,7 @@ finder.destroy();
 | `onError` | `(err) => void` | — | Any search or fetch error. |
 
 `output` keys are the API field names —
-`address_line_1`, `post_town`, `postcode`, `county`, `udprn`,
+`address_line_1`, `post_town`, `postcode`, `udprn`,
 `latitude`, `longitude`, etc. See
 [`@postio/api-types`](https://www.npmjs.com/package/@postio/api-types)
 for the full list.

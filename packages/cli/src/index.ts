@@ -207,7 +207,6 @@ function printAddressDetail(a: Address): void {
     ["Dep. throughfare", a.dependent_thoroughfare],
     ["Dep. locality", a.dependent_locality],
     ["Post town", a.post_town],
-    ["County", a.county],
     ["District", a.district],
     ["Ward", a.ward],
     ["Postcode", a.postcode],
