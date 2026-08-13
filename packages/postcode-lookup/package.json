@@ -1,0 +1,55 @@
+{
+  "name": "@postio/postcode-lookup",
+  "version": "0.1.0",
+  "description": "UK postcode lookup and address autocomplete. Royal Mail PAF data via the Postio API. A named alias for @postio/node.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "pnpm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/postio-uk/postio-integrations.git",
+    "directory": "packages/postcode-lookup"
+  },
+  "keywords": [
+    "postcode-lookup",
+    "postcode",
+    "uk-postcode",
+    "postcode-api",
+    "address-lookup",
+    "address-autocomplete",
+    "address-validation",
+    "uk-address",
+    "paf",
+    "royal-mail",
+    "postio"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@postio/node": "workspace:^"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

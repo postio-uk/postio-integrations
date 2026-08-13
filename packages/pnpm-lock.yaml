@@ -97,6 +97,16 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  postcode-lookup:
+    dependencies:
+      '@postio/node':
+        specifier: workspace:^
+        version: link:../node
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   postman-collection:
     devDependencies:
       '@postio/openapi':
