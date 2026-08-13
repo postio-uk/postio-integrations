@@ -4,26 +4,47 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { Postio, PostioError } from "@postio/core";
 import { z } from "zod";
 
-const VERSION = "0.1.0";
+const VERSION = "0.1.3";
 
-function readApiKey(): string {
+const MISSING_KEY_MESSAGE =
+  "POSTIO_API_KEY is not set. Add it to this MCP server's environment, then retry. " +
+  "Get a free key at https://postio.co.uk/signup";
+
+/**
+ * Read the key without killing the process when it is absent.
+ *
+ * The server used to `process.exit(1)` here. That broke two things: an MCP
+ * host listing tools before credentials are configured saw the process die
+ * with the reason on stderr where nobody looks, and automated introspection
+ * (Glama's evaluation, for one) could never enumerate the tools at all, so
+ * the server showed as uninstallable.
+ *
+ * Tools are static and safe to advertise without a key. We fail per-call
+ * instead, where the user is actually looking and the message is actionable.
+ */
+function readApiKey(): string | null {
   const key = process.env["POSTIO_API_KEY"];
-  if (!key || key.length === 0) {
-    process.stderr.write(
-      "@postio/mcp: POSTIO_API_KEY environment variable is required.\n" +
-        "Get a key at https://postio.co.uk/dashboard.\n",
-    );
-    process.exit(1);
-  }
-  return key;
+  return key && key.length > 0 ? key : null;
 }
 
 const apiKey = readApiKey();
 const baseUrl = process.env["POSTIO_BASE_URL"];
-const client = new Postio({
-  apiKey,
-  ...(baseUrl ? { baseUrl } : {}),
-});
+if (!apiKey) {
+  process.stderr.write(`@postio/mcp: ${MISSING_KEY_MESSAGE}\n`);
+}
+const client = apiKey
+  ? new Postio({ apiKey, ...(baseUrl ? { baseUrl } : {}) })
+  : null;
+
+/**
+ * Every tool handler already wraps its body in try/catch -> fail(err), so
+ * throwing here surfaces the message to the user in the tool result rather
+ * than on a stderr stream nobody reads.
+ */
+function requireClient(): Postio {
+  if (!client) throw new Error(MISSING_KEY_MESSAGE);
+  return client;
+}
 
 const server = new McpServer({ name: "postio", version: VERSION });
 
@@ -94,7 +115,7 @@ server.tool(
   },
   async ({ query, max_results }) => {
     try {
-      const env = await client.address.search(query, {
+      const env = await requireClient().address.search(query, {
         ...(max_results !== undefined ? { maxResults: max_results } : {}),
       });
       return ok(env);
@@ -119,7 +140,7 @@ server.tool(
   },
   async ({ postcode, max_results }) => {
     try {
-      const env = await client.address.postcode(postcode, {
+      const env = await requireClient().address.postcode(postcode, {
         ...(max_results !== undefined ? { maxResults: max_results } : {}),
       });
       return ok(env);
@@ -139,7 +160,7 @@ server.tool(
   },
   async ({ udprn }) => {
     try {
-      const env = await client.address.udprn(udprn);
+      const env = await requireClient().address.udprn(udprn);
       return ok(env);
     } catch (err) {
       return fail(err);
@@ -155,7 +176,7 @@ server.tool(
   },
   async ({ email }) => {
     try {
-      const env = await client.email.validate(email);
+      const env = await requireClient().email.validate(email);
       return ok(env);
     } catch (err) {
       return fail(err);
@@ -171,7 +192,7 @@ server.tool(
   },
   async ({ number }) => {
     try {
-      const env = await client.phone.validate(number);
+      const env = await requireClient().phone.validate(number);
       return ok(env);
     } catch (err) {
       return fail(err);
@@ -185,7 +206,7 @@ server.tool(
   {},
   async () => {
     try {
-      const env = await client.connect();
+      const env = await requireClient().connect();
       return ok(env);
     } catch (err) {
       return fail(err);
