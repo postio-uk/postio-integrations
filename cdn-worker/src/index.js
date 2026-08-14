@@ -10,10 +10,6 @@
  *   /latest/<file>             → discouraged-but-supported. Same cache as /vN/.
  *
  * Plus one POST-only endpoint:
- *   POST /_wp                  → RETIRED no-op (was WordPress telemetry). Writes
- *                                to env.WP_TELEMETRY (Analytics Engine
- *                                dataset). One data point per active
- *                                builder per ping.
  *
  * Anything else 404s. Always returns CORS `*` (these are public bundles).
  *
@@ -136,47 +132,12 @@ function r2KeyFromPath(pathname) {
 }
 
 // ---------------------------------------------------------------------
-// Retired WordPress telemetry route (POST /_wp) — see the handler.
-// ---------------------------------------------------------------------
-
-async function handleWpTelemetry(request) {
-  // RETIRED 2026-08-14. The WordPress plugin no longer sends anything.
-  //
-  // WP.org pended our submission under guidelines 7 and 9: the weekly ping
-  // defaulted to ON and was scheduled at activation, so a fresh install
-  // started reporting before the user had agreed to anything. Disclosing it
-  // in the readme is not consent. They were right, and the feature was
-  // removed from the plugin rather than made opt-in — at off-by-default
-  // rates the data would have been too thin to decide anything with.
-  //
-  // The route is deliberately KEPT and made a no-op rather than deleted.
-  // v0.1.0 shipped on GitHub with telemetry on; if anyone ever activates
-  // that build it will POST here, and quietly accepting and discarding is
-  // kinder than a 404 storm against a dead endpoint. Nothing is read from
-  // the body and nothing is written anywhere.
-  //
-  // Safe to delete outright once no request has arrived for a month.
-  if (request.method === "OPTIONS") {
-    return new Response(null, {
-      status: 204,
-      headers: { allow: "POST", "access-control-allow-origin": "*" },
-    });
-  }
-  if (request.method !== "POST") {
-    return new Response("method not allowed", { status: 405, headers: { allow: "POST" } });
-  }
-  return new Response(null, { status: 204, headers: { "access-control-allow-origin": "*" } });
-}
 
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const pathname = url.pathname;
 
-    // /_wp is POST-only — handle before the GET/HEAD gate below.
-    if (pathname === "/_wp") {
-      return handleWpTelemetry(request, env);
-    }
 
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: corsHeaders() });
