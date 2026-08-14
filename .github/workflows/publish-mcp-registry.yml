@@ -1,0 +1,79 @@
+name: Publish @postio/mcp to the MCP Registry
+
+# Lists the server at registry.modelcontextprotocol.io — the official MCP
+# registry, which every aggregator (GitHub MCP Registry, Glama, PulseMCP,
+# mcp.so, Smithery) scrapes hourly. The registry stores metadata only; npm
+# still hosts the code.
+#
+# Runs after release-packages.yml has put the new version on npm, because the
+# registry verifies package ownership by reading `mcpName` out of the
+# published package.json. That's why this job waits for npm rather than
+# assuming the sibling workflow already finished.
+#
+# Auth is domain-based (HTTP): the registry fetches
+# https://postio.co.uk/.well-known/mcp-registry-auth (served by postio-www)
+# and checks a signature made with MCP_REGISTRY_PRIVATE_KEY. That's what
+# earns us the `uk.co.postio/*` namespace instead of `io.github.<user>/*`.
+# Private key also kept at ~/PROJECTS/ONNO/POSTIO/.secrets/ on the dev box.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - 'packages/mcp/server.json'
+      - '.github/workflows/publish-mcp-registry.yml'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/mcp
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read target version
+        id: v
+        run: echo "version=$(jq -r .version server.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Skip if this version is already in the registry
+        id: check
+        run: |
+          name=$(jq -r .name server.json)
+          encoded=${name/\//%2F}
+          found=$(curl -fsS "https://registry.modelcontextprotocol.io/v0.1/servers/${encoded}/versions" \
+            | jq -r --arg v "${{ steps.v.outputs.version }}" \
+              '[.servers[]?.server.version] | index($v) // "no"')
+          if [ "$found" != "no" ]; then
+            echo "::notice ::$name@${{ steps.v.outputs.version }} already listed — nothing to do"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+        continue-on-error: true # a 404 here just means the server isn't listed yet
+
+      - name: Wait for the version to land on npm
+        if: steps.check.outputs.skip != 'true'
+        run: |
+          for i in $(seq 1 30); do
+            if npm view "@postio/mcp@${{ steps.v.outputs.version }}" version >/dev/null 2>&1; then
+              echo "npm has ${{ steps.v.outputs.version }}"
+              exit 0
+            fi
+            echo "waiting for @postio/mcp@${{ steps.v.outputs.version }} on npm ($i/30)"
+            sleep 20
+          done
+          echo "::error ::@postio/mcp@${{ steps.v.outputs.version }} never appeared on npm — did release-packages.yml fail?"
+          exit 1
+
+      - name: Install mcp-publisher
+        if: steps.check.outputs.skip != 'true'
+        run: curl -sL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" | tar xz mcp-publisher
+
+      - name: Authenticate (domain namespace, HTTP proof)
+        if: steps.check.outputs.skip != 'true'
+        run: ./mcp-publisher login http --domain postio.co.uk --private-key "${{ secrets.MCP_REGISTRY_PRIVATE_KEY }}"
+
+      - name: Publish
+        if: steps.check.outputs.skip != 'true'
+        run: ./mcp-publisher publish

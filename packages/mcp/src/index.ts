@@ -4,7 +4,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { Postio, PostioError } from "@postio/core";
 import { z } from "zod";
 
-const VERSION = "0.1.3";
+const VERSION = "0.1.4";
 
 const MISSING_KEY_MESSAGE =
   "POSTIO_API_KEY is not set. Add it to this MCP server's environment, then retry. " +

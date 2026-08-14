@@ -100,7 +100,24 @@ Each tool returns the raw API envelope as JSON text, including
 | `POSTIO_API_KEY` | **Required.** Your Postio API key. |
 | `POSTIO_BASE_URL` | Optional override of the API base URL (default `https://api.postio.co.uk/v1`). |
 
-The server fails fast at startup if `POSTIO_API_KEY` is missing.
+A missing `POSTIO_API_KEY` is not fatal — the server still starts and
+advertises its tools, so a host can list them before you've configured
+credentials. Individual calls then fail with a message telling you to
+set the key.
+
+## Official MCP Registry
+
+Listed at [registry.modelcontextprotocol.io](https://registry.modelcontextprotocol.io)
+as **`uk.co.postio/postcode-address-validation`**, published under a
+domain-verified namespace (not a personal GitHub one).
+
+```bash
+curl "https://registry.modelcontextprotocol.io/v0.1/servers/uk.co.postio%2Fpostcode-address-validation/versions/latest"
+```
+
+The listing is generated from [`server.json`](./server.json) in this
+directory; the version there tracks this package's version. CI
+(`publish-mcp-registry.yml`) republishes on change.
 
 ## License
 

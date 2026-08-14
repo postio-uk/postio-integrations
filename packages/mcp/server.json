@@ -1,0 +1,47 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "uk.co.postio/postcode-address-validation",
+  "title": "Postio — UK Address, Postcode, Email & Phone Validation",
+  "description": "Validate UK addresses, postcodes, emails and phone numbers — Royal Mail PAF, live SMTP and HLR.",
+  "version": "0.1.4",
+  "websiteUrl": "https://postio.co.uk/integrations/mcp",
+  "repository": {
+    "url": "https://github.com/postio-uk/postio-integrations",
+    "source": "github",
+    "id": "1226246873",
+    "subfolder": "packages/mcp"
+  },
+  "icons": [
+    {
+      "src": "https://postio.co.uk/assets/logo-mark-512.png",
+      "mimeType": "image/png",
+      "sizes": ["512x512"]
+    }
+  ],
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "@postio/mcp",
+      "version": "0.1.4",
+      "runtimeHint": "npx",
+      "transport": { "type": "stdio" },
+      "environmentVariables": [
+        {
+          "name": "POSTIO_API_KEY",
+          "description": "Postio API key (pk_…). Free key, first 100 lookups on us, no card: https://postio.co.uk/signup",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        },
+        {
+          "name": "POSTIO_BASE_URL",
+          "description": "Override the API base URL. Defaults to https://api.postio.co.uk. Only needed for staging.",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}
