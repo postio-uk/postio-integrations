@@ -14,12 +14,6 @@ routes = [
 binding = "BUNDLES"
 bucket_name = "postio-cdn-bundles"
 
-# WordPress plugin telemetry sink. /_wp writes one data point per
-# (ping × active form-builder slug) so we can SQL-aggregate install
-# share by builder. See ../../postio-wordpress/src/Telemetry.php.
-[[analytics_engine_datasets]]
-binding = "WP_TELEMETRY"
-dataset = "postio_wp_telemetry"
 
 [observability]
 enabled = true
@@ -38,6 +32,3 @@ routes = [
 binding = "BUNDLES"
 bucket_name = "postio-cdn-bundles-stage"
 
-[[env.stage.analytics_engine_datasets]]
-binding = "WP_TELEMETRY"
-dataset = "postio_wp_telemetry_stage"
