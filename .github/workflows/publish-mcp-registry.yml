@@ -43,14 +43,17 @@ jobs:
         run: |
           name=$(jq -r .name server.json)
           encoded=${name/\//%2F}
-          found=$(curl -fsS "https://registry.modelcontextprotocol.io/v0.1/servers/${encoded}/versions" \
-            | jq -r --arg v "${{ steps.v.outputs.version }}" \
-              '[.servers[]?.server.version] | index($v) // "no"')
+          # Publish is the default. Only a positive version match skips — a 404
+          # (server never published) or any network wobble must fall through to
+          # the publish, never short-circuit it.
+          body=$(curl -sS "https://registry.modelcontextprotocol.io/v0.1/servers/${encoded}/versions" || echo '{}')
+          found=$(printf '%s' "$body" | jq -r --arg v "${{ steps.v.outputs.version }}" \
+            '[.servers[]?.server.version] | index($v) // "no"' 2>/dev/null || echo "no")
+          [ -n "$found" ] || found="no"
           if [ "$found" != "no" ]; then
             echo "::notice ::$name@${{ steps.v.outputs.version }} already listed — nothing to do"
             echo "skip=true" >> "$GITHUB_OUTPUT"
           fi
-        continue-on-error: true # a 404 here just means the server isn't listed yet
 
       - name: Wait for the version to land on npm
         if: steps.check.outputs.skip != 'true'
