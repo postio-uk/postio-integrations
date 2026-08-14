@@ -10,7 +10,7 @@
  *   /latest/<file>             → discouraged-but-supported. Same cache as /vN/.
  *
  * Plus one POST-only endpoint:
- *   POST /_wp                  → WordPress plugin telemetry sink. Writes
+ *   POST /_wp                  → RETIRED no-op (was WordPress telemetry). Writes
  *                                to env.WP_TELEMETRY (Analytics Engine
  *                                dataset). One data point per active
  *                                builder per ping.
@@ -136,38 +136,26 @@ function r2KeyFromPath(pathname) {
 }
 
 // ---------------------------------------------------------------------
-// WordPress plugin telemetry sink (POST /_wp)
-//
-// postio-uk/postio-wordpress pings weekly with:
-//   { plugin_version, wp_version, php_version, site_lang, active_builders[] }
-//
-// The plugin's settings disclosure promises no URLs, post titles, form
-// contents, API keys, or IP-derived data are sent. This handler only
-// reads the listed fields and writes them to Analytics Engine — no
-// other body fields are persisted.
+// Retired WordPress telemetry route (POST /_wp) — see the handler.
 // ---------------------------------------------------------------------
 
-const WP_TELEMETRY_MAX_BODY = 4096;
-const WP_TELEMETRY_MAX_FIELD = 64;
-const WP_TELEMETRY_MAX_BUILDERS = 50;
-const WP_TELEMETRY_VERSION_RX = /^[A-Za-z0-9._\-+]+$/;
-
-function trimField(v) {
-  if (typeof v !== "string") return "";
-  // Strip control chars and cap length.
-  return v.replace(/[\x00-\x1f\x7f]/g, "").slice(0, WP_TELEMETRY_MAX_FIELD).trim();
-}
-
-function safeBuilderSlug(v) {
-  const s = trimField(v);
-  // Whitelist-style: lowercase a-z, 0-9, dash. Anything else is dropped
-  // — the WP plugin only ever sends slugs that match.
-  if (s.length === 0 || s.length > 40) return "";
-  if (!/^[a-z0-9-]+$/.test(s)) return "";
-  return s;
-}
-
-async function handleWpTelemetry(request, env) {
+async function handleWpTelemetry(request) {
+  // RETIRED 2026-08-14. The WordPress plugin no longer sends anything.
+  //
+  // WP.org pended our submission under guidelines 7 and 9: the weekly ping
+  // defaulted to ON and was scheduled at activation, so a fresh install
+  // started reporting before the user had agreed to anything. Disclosing it
+  // in the readme is not consent. They were right, and the feature was
+  // removed from the plugin rather than made opt-in — at off-by-default
+  // rates the data would have been too thin to decide anything with.
+  //
+  // The route is deliberately KEPT and made a no-op rather than deleted.
+  // v0.1.0 shipped on GitHub with telemetry on; if anyone ever activates
+  // that build it will POST here, and quietly accepting and discarding is
+  // kinder than a 404 storm against a dead endpoint. Nothing is read from
+  // the body and nothing is written anywhere.
+  //
+  // Safe to delete outright once no request has arrived for a month.
   if (request.method === "OPTIONS") {
     return new Response(null, {
       status: 204,
@@ -175,65 +163,9 @@ async function handleWpTelemetry(request, env) {
     });
   }
   if (request.method !== "POST") {
-    return new Response("Method Not Allowed", {
-      status: 405,
-      headers: { allow: "POST", "access-control-allow-origin": "*" },
-    });
+    return new Response("method not allowed", { status: 405, headers: { allow: "POST" } });
   }
-
-  const cl = request.headers.get("content-length");
-  if (cl && Number(cl) > WP_TELEMETRY_MAX_BODY) {
-    return new Response(null, { status: 413 });
-  }
-
-  let body;
-  try {
-    body = await request.json();
-  } catch {
-    return new Response(null, { status: 400 });
-  }
-  if (!body || typeof body !== "object") {
-    return new Response(null, { status: 400 });
-  }
-
-  const pluginVersion = trimField(body.plugin_version);
-  const wpVersion = trimField(body.wp_version);
-  const phpVersion = trimField(body.php_version);
-  const siteLang = trimField(body.site_lang);
-  const builders = Array.isArray(body.active_builders)
-    ? body.active_builders
-        .map(safeBuilderSlug)
-        .filter(Boolean)
-        .slice(0, WP_TELEMETRY_MAX_BUILDERS)
-    : [];
-
-  if (!pluginVersion || !WP_TELEMETRY_VERSION_RX.test(pluginVersion)) {
-    return new Response(null, { status: 400 });
-  }
-
-  if (!env.WP_TELEMETRY) {
-    // Binding missing — accept silently so the plugin doesn't retry.
-    return new Response(null, { status: 204 });
-  }
-
-  const baseBlobs = [pluginVersion, wpVersion, phpVersion, siteLang];
-
-  if (builders.length === 0) {
-    env.WP_TELEMETRY.writeDataPoint({
-      blobs: [...baseBlobs, "_none"],
-      indexes: ["_none"],
-    });
-  } else {
-    const dedup = Array.from(new Set(builders));
-    for (const builder of dedup) {
-      env.WP_TELEMETRY.writeDataPoint({
-        blobs: [...baseBlobs, builder],
-        indexes: [builder],
-      });
-    }
-  }
-
-  return new Response(null, { status: 204 });
+  return new Response(null, { status: 204, headers: { "access-control-allow-origin": "*" } });
 }
 
 export default {

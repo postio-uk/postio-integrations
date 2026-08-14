@@ -14,7 +14,11 @@ routes = [
 binding = "BUNDLES"
 bucket_name = "postio-cdn-bundles"
 
-# WordPress plugin telemetry sink. /_wp writes one data point per
+# RETIRED 2026-08-14 — /_wp no longer writes anything (WP.org pended the
+# submission over unconsented phone-home; the feature was removed from the
+# plugin). The binding is kept only so the worker deploys unchanged while
+# the route is a no-op; drop both when the route goes.
+# Was: WordPress plugin telemetry sink. /_wp wrote one data point per
 # (ping × active form-builder slug) so we can SQL-aggregate install
 # share by builder. See ../../postio-wordpress/src/Telemetry.php.
 [[analytics_engine_datasets]]
