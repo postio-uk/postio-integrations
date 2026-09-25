@@ -15,7 +15,7 @@ on:
 
 permissions:
   contents: read
-  id-token: write  # for npm provenance once postio-uk repos go public
+  id-token: write  # npm provenance attestations (repo is public since 2026-05-03; n8n verification requires them)
 
 jobs:
   publish:
@@ -70,6 +70,6 @@ jobs:
             # Use pnpm publish so workspace: protocol in deps gets resolved
             # to the actual semver range. npm publish ships the literal
             # "workspace:^" string which is unusable by consumers.
-            pnpm publish --access public --no-git-checks
+            pnpm publish --access public --no-git-checks --provenance
             cd ..
           done
