@@ -1,4 +1,4 @@
-# n8n-nodes-postio
+# @postio/n8n-nodes-postio
 
 An [n8n](https://n8n.io) community node for [Postio](https://postio.co.uk) — UK address lookup, postcode autocomplete, email validation and phone validation on official Royal Mail PAF data.
 
@@ -16,10 +16,10 @@ Address search is free; you pay only when a full address is returned. Email and 
 
 ## Install
 
-In n8n: **Settings → Community Nodes → Install** and enter `n8n-nodes-postio`. Or on a self-hosted instance:
+In n8n: **Settings → Community Nodes → Install** and enter `@postio/n8n-nodes-postio`. Or on a self-hosted instance:
 
 ```
-npm install n8n-nodes-postio
+npm install @postio/n8n-nodes-postio
 ```
 
 ## Credentials

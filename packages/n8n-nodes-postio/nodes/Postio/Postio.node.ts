@@ -29,7 +29,7 @@ export class Postio implements INodeType {
 			baseURL: 'https://api.postio.co.uk/v1',
 			headers: {
 				Accept: 'application/json',
-				'x-postio-client': 'n8n-nodes-postio/0.1.0',
+				'x-postio-client': '@postio/n8n-nodes-postio/0.1.1',
 			},
 		},
 		properties: [
