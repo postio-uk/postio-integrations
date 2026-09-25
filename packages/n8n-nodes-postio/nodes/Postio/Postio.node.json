@@ -1,5 +1,5 @@
 {
-  "node": "n8n-nodes-postio.postio",
+  "node": "@postio/n8n-nodes-postio.postio",
   "nodeVersion": "1.0",
   "codexVersion": "1.0",
   "categories": ["Data & Storage", "Utility"],
