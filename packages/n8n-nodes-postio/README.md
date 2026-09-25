@@ -12,7 +12,7 @@ An [n8n](https://n8n.io) community node for [Postio](https://postio.co.uk) — U
 | Email | Validate | Syntax, MX, live SMTP probe, disposable/role flags, typo suggestion |
 | Phone | Validate | E.164 normalisation, live carrier lookup, line type, reachability |
 
-Address search is free; you pay only when a full address is returned. Email and phone are billed per lookup. Pricing from 1p per request, 100 free lookups on sign-up, no contracts — see [postio.co.uk/pricing](https://postio.co.uk/pricing).
+Address search is free; you pay only when a full address is returned. Email and phone are billed per lookup. Pay as you go, 100 free lookups on sign-up, no contracts — see [postio.co.uk/pricing](https://postio.co.uk/pricing).
 
 ## Install
 
