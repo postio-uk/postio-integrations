@@ -39,6 +39,14 @@ in `packages/api-types/package.json` should match the
 Other packages have independent SemVer; bump
 `packages/<name>/package.json#version` when you intend a release.
 
+**Sibling deps must be `"workspace:^"`, never a pinned registry
+version.** `@postio/core` carried `"@postio/api-types": "1.0.2"` until
+2026-08-12 and had been silently building its types against a stale
+*published* api-types instead of the one in this repo — so a field
+removed from the spec still appeared in core's and
+address-finder-bundled's generated `.d.ts` after a full rebuild. If a
+type change doesn't propagate, check this first.
+
 ## Workflows
 
 - `release-packages.yml` — on master push under `packages/**`,
