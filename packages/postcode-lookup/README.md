@@ -23,8 +23,9 @@ const { results } = await postio.address.postcode("W1G 8YW");
 const { results: suggestions } = await postio.address.search({ q: "57 wimpole" });
 ```
 
-Searching is free; you are charged 2.2p only when you retrieve an address, and
-nothing when a search returns no match. New accounts get 100 free lookups
+Searching is free; you are charged only when you retrieve an address (pay as
+you go, from 1p a lookup — current rates at [postio.co.uk/pricing](https://postio.co.uk/pricing)),
+and nothing when a search returns no match. New accounts get 100 free lookups
 without a card — [get a key](https://postio.co.uk/signup).
 
 Full documentation: [postio.co.uk/docs](https://postio.co.uk/docs)
