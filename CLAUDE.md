@@ -60,6 +60,48 @@ type change doesn't propagate, check this first.
   `packages/address-finder*/**`, builds the bundled package and
   uploads to the CDN's R2 bucket.
 
+## npm auth — a recurring trip hazard
+
+Publishing uses an `NPM_TOKEN` GH secret (here and in `postio-api`). npm
+caps write-token lifetime at 90 days, so it expires silently and the
+publish fails with a misleading `E404 on PUT` — read that as "token can't
+write here", not "no such package". Granular tokens need **Bypass 2FA**
+ticked or CI fails regardless. The permanent fix is npm OIDC Trusted
+Publishing (the server SDKs already use it), configured per package —
+about ten separate setups across the two repos.
+
+## MCP Registry release
+
+`@postio/mcp` is listed on the official MCP Registry as
+`uk.co.postio/postcode-address-validation`. **The name is permanent** —
+renaming means publishing a second server. `description` and `title` are
+capped at 100 characters each and are what aggregators index.
+
+To release: bump `packages/mcp/package.json#version`, the `VERSION`
+const in `src/index.ts`, and both version fields in
+`packages/mcp/server.json`; push master. `release-packages.yml` publishes
+to npm, then `publish-mcp-registry.yml` waits for npm (the registry
+reads `mcpName` from the *published* package.json) and republishes the
+listing.
+
+## Outstanding: the widget release
+
+Four items, all wanting the same version bump and CDN deploy:
+
+1. `populateOutputs` and `pickIndex` in `address-finder` write with plain
+   `el.value =`, which React's value tracker discards — so **any React
+   or Vue form using `output` mapping never receives the value**.
+   Currently shimmed inside the WordPress plugin only.
+2. The widget dispatches `input` back into its own search box, which
+   retriggers a search and reopens the dropdown. Also shimmed.
+3. Let callers set `x-postio-client`: `core` assigns it *after*
+   spreading caller headers, and `address-finder` has no pass-through.
+4. `PostioOptions.headers` doc comment names two protected headers when
+   there are three.
+
+The WordPress plugin **bundles** the widget, so it needs its own plugin
+release; drop-in CDN users on `/v1/` update automatically.
+
 ## Public copy — canonical Postio one-liner
 
 Whenever a README, package description, or other public-facing surface
@@ -83,6 +125,6 @@ propagate the new version to every surface in one pass.
   published as `@postio/openapi` on npm. This repo *consumes* it.
 - Per-language server SDKs (Python / Go / PHP / Ruby / .NET) — each
   in its own repo: `postio-uk/postio-{python,go,php,ruby,dotnet}`.
-- Per-platform plugins (WordPress, Shopify, Magento) — each in its
-  own repo when shipped.
+- Per-platform plugins — WordPress (`postio-uk/postio-wordpress-plugin`),
+  Shopify, Zapier — each in its own repo.
 - The marketing site + customer dashboard — `postio-uk/postio-www`.
