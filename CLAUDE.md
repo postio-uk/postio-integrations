@@ -119,6 +119,17 @@ Don't paraphrase locally. If the line doesn't fit a particular surface,
 flag it so the canonical wording can be updated centrally — then
 propagate the new version to every surface in one pass.
 
+## WordPress test site — start it, use it, stop it
+
+The WordPress plugin's local test site (WooCommerce plus the form builders, from `postio-wordpress/.wp-env.json`) is **not left running** on the Hetzner box. It ran idle for 7 weeks once, eating RAM and swap, and was torn down on 2026-10-06.
+
+Whenever work touches the WordPress plugin or needs that site:
+- **Start**: `cd ~/PROJECTS/ONNO/POSTIO/postio-wordpress && npx @wordpress/env start` (http://localhost:8888, admin / password; reach it from Olly's devices with `tailscale serve`, never nginx).
+- **Stop when done, same session**: `npx @wordpress/env stop` (keeps the data), or `npx @wordpress/env destroy` if nothing on it needs keeping.
+- If `wp-env` says "Environment not initialized" but containers are up, the env was started from another home dir — tear it down with `docker compose down -v` in its `~/wp-env/<hash>/` folder.
+
+Never finish a session with it still running.
+
 ## What does NOT live here
 
 - The OpenAPI spec source — that's in `postio-uk/postio-api`,
