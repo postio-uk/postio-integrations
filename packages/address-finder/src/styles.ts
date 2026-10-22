@@ -36,6 +36,17 @@ const STRUCTURAL_CSS = `
   text-overflow: ellipsis;
 }
 .postio-af__option:focus { outline: none; }
+.postio-af__listbox--postcode .postio-af__option {
+  white-space: normal;
+}
+.postio-af__status {
+  cursor: default;
+  user-select: none;
+  font: inherit;
+  white-space: normal;
+  position: sticky;
+  top: 0;
+}
 `;
 
 const VISUAL_CSS = `
@@ -53,6 +64,12 @@ const VISUAL_CSS = `
 .postio-af__option[aria-selected="true"],
 .postio-af__option:hover {
   background: var(--postio-af-option-hover-bg, rgba(0, 0, 0, 0.06));
+}
+.postio-af__status {
+  padding: var(--postio-af-status-padding, 8px 10px);
+  font-size: var(--postio-af-status-size, 0.875em);
+  opacity: var(--postio-af-status-opacity, 0.7);
+  background: var(--postio-af-bg, #fff);
 }
 .postio-af__listbox:focus-visible {
   outline: var(--postio-af-focus-ring, 2px solid #2563eb);

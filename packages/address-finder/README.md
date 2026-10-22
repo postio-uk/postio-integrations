@@ -57,7 +57,9 @@ finder.destroy();
 | `bare` | `boolean` | `false` | Skip the visual CSS layer; ship structural only. |
 | `minLength` | `number` | `2` | Min chars before searching. |
 | `debounceMs` | `number` | `80` | Debounce input by N ms. |
-| `maxResults` | `number` | `7` | Max suggestions in dropdown (cap 50). |
+| `mode` | `"search" \| "postcode"` | `"search"` | `search`: type-ahead over anything typed. `postcode`: once a full UK postcode is typed, list every address at it (up to 100) and let the customer pick. See below. |
+| `maxResults` | `number` | `7` | Type-ahead suggestions to show, 1–50. Ignored in postcode mode. |
+| `labels` | `object` | English | Override postcode-mode wording: `postcodeHint`, `postcodeLoading`, `postcodeCount` (`{count}`, `{postcode}`), `postcodeCountOne`, `postcodeNone`. |
 | `className` | `string` | — | Extra class on the listbox element. |
 | `zIndex` | `number` | `1000` | z-index of the dropdown. |
 | `onReady` | `() => void` | — | Called once after setup. |
@@ -75,6 +77,23 @@ for the full list.
 `<textarea>` and `<select>` get their `.value` set + `input` and
 `change` events dispatched (so React/Vue/Angular pick up the change).
 Anything else gets `.textContent` set.
+
+## Postcode mode
+
+```js
+Postio.AddressFinder.setup({ apiKey, input: "#address", output, mode: "postcode" });
+```
+
+The customer types a postcode. Part-way through, the dropdown shows a short
+hint; once it's a full postcode, one call to `/address/postcode` returns every
+address on it, listed in natural order (Flat 2 before Flat 10) under a header
+such as "96 addresses at E14 9GT". Picking one fills the outputs straight
+from that response — there's no second call.
+
+Billing: one lookup per postcode with addresses. Empty postcodes aren't
+charged, and repeat lookups of the same postcode on the page come from a
+local cache. Type-ahead (`search`) remains free to search and charges one
+lookup on pick.
 
 ## Theming
 
