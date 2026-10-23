@@ -1,8 +1,8 @@
 {
   "name": "@postio/mcp",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "mcpName": "uk.co.postio/postcode-address-validation",
-  "description": "Model Context Protocol server for Postio \u2014 UK address, email, and phone validation as tools for Claude, Cursor, Windsurf, Zed, etc.",
+  "description": "Model Context Protocol server for Postio — UK address, email, and phone validation as tools for Claude, Cursor, Windsurf, Zed, etc.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
@@ -56,7 +56,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@modelcontextprotocol/sdk": "^1.32.1",
     "@postio/core": "workspace:^",
     "zod": "^3.25.0 || ^4.0.0"
   },
