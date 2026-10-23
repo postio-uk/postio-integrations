@@ -36,7 +36,7 @@
         },
         {
           "name": "POSTIO_BASE_URL",
-          "description": "Override the API base URL. Defaults to https://api.postio.co.uk. Only needed for staging.",
+          "description": "Override the API base URL. Defaults to https://api.postio.co.uk/v1 (include /v1). Only needed for staging.",
           "isRequired": false,
           "isSecret": false,
           "format": "string"
