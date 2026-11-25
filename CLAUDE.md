@@ -84,23 +84,30 @@ to npm, then `publish-mcp-registry.yml` waits for npm (the registry
 reads `mcpName` from the *published* package.json) and republishes the
 listing.
 
-## Outstanding: the widget release
+## Widget release 1.3.0 (shipped 2026-11-25)
 
-Four items, all wanting the same version bump and CDN deploy:
+The four long-standing widget items shipped together as
+`@postio/address-finder` / `-bundled` 1.3.0, `@postio/core` 0.3.0 and
+`@postio/react` 0.2.0, on the CDN (`/v1/` and `/v1.3.0/`) and in WordPress
+plugin 1.2.0:
 
-1. `populateOutputs` and `pickIndex` in `address-finder` write with plain
-   `el.value =`, which React's value tracker discards — so **any React
-   or Vue form using `output` mapping never receives the value**.
-   Currently shimmed inside the WordPress plugin only.
-2. The widget dispatches `input` back into its own search box, which
-   retriggers a search and reopens the dropdown. Also shimmed.
-3. Let callers set `x-postio-client`: `core` assigns it *after*
-   spreading caller headers, and `address-finder` has no pass-through.
-4. `PostioOptions.headers` doc comment names two protected headers when
-   there are three.
+1. Fields are written through the element's native value setter, so
+   controlled React/Vue inputs take the value (was shimmed in the WP plugin).
+2. The widget's own writes never start a new search; a search box that is
+   also a mapped output keeps that value instead of the one-line summary.
+3. `clientId` (address-finder, React prop) sets `x-postio-client`; in core a
+   caller's `x-postio-client` header now wins (`x-api-key` / `accept` stay
+   protected).
+4. The `PostioOptions.headers` doc comment is correct.
 
-The WordPress plugin **bundles** the widget, so it needs its own plugin
-release; drop-in CDN users on `/v1/` update automatically.
+Also: `output` is optional (console warning), selector outputs are re-found
+when a re-render replaced the node, and `@postio/react`'s `AddressFinder`
+now uses the provider's `baseUrl`.
+
+**Browser check before any widget release**:
+`KEY=<stage www key> packages/address-finder/browser-test/run.sh` (plain
+HTML, the CDN bundle on a React-controlled form, and `@postio/react`,
+against the stage API). It failed 5 checks on the 1.2.0 bundle.
 
 ## Public copy — canonical Postio one-liner
 
