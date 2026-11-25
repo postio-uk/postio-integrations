@@ -69,6 +69,7 @@ finder-specific props below.
 | `onSelect` | `(address: Address) => void` | Recommended way to capture the picked address. |
 | `output` | `OutputMap` | Optional. Direct DOM-binding escape hatch for non-React fields. |
 | `apiKey` | `string` | Override the provider's key for this finder only. |
+| `clientId` | `string` | Names your integration in the `x-postio-client` header. |
 | `bare` | `boolean` | Skip default visual styling. |
 | `minLength` | `number` | Default `2`. |
 | `debounceMs` | `number` | Default `80`. |

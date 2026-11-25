@@ -20,7 +20,11 @@ export interface PostioOptions {
   baseUrl?: string;
   fetch?: typeof fetch;
   timeoutMs?: number;
-  /** Extra headers merged into every request. `x-api-key` / `accept` cannot be overridden. */
+  /**
+   * Extra headers merged into every request. `x-api-key` and `accept` cannot
+   * be overridden. `x-postio-client` defaults to `postio-core/<version>`; set
+   * it to name your integration (e.g. `my-app/1.0`).
+   */
   headers?: Record<string, string>;
 }
 
@@ -69,7 +73,7 @@ export class PostioError extends Error {
 
 const DEFAULT_BASE_URL = "https://api.postio.co.uk/v1";
 const DEFAULT_TIMEOUT_MS = 10_000;
-const VERSION = "0.1.0";
+const VERSION = "0.3.0";
 const CLIENT_ID = `postio-core/${VERSION}`;
 
 export class Postio {
@@ -106,7 +110,11 @@ export class Postio {
     this.#baseUrl = (options.baseUrl ?? DEFAULT_BASE_URL).replace(/\/+$/, "");
     this.#fetch = (options.fetch ?? fallbackFetch!).bind(globalThis);
     this.#timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-    this.#extraHeaders = { ...(options.headers ?? {}) };
+    // Lower-case the names so a caller's `X-Postio-Client` replaces ours
+    // instead of being sent alongside it.
+    this.#extraHeaders = Object.fromEntries(
+      Object.entries(options.headers ?? {}).map(([k, v]) => [k.toLowerCase(), v]),
+    );
 
     this.address = {
       search: (q, opts) =>
@@ -158,10 +166,10 @@ export class Postio {
     }
 
     const headers: Record<string, string> = {
+      "x-postio-client": CLIENT_ID,
       ...this.#extraHeaders,
       "x-api-key": this.#apiKey,
       "accept": "application/json",
-      "x-postio-client": CLIENT_ID,
     };
 
     const controller = new AbortController();

@@ -1,0 +1,9 @@
+<!doctype html><html><body>
+<input id="search"><input id="town"><input id="pc"><textarea id="lat"></textarea>
+<input id="s2">
+<script src="cdn.js"></script>
+<script>
+window.h1 = Postio.AddressFinder.setup({ apiKey: window.KEY, baseUrl: "https://stage-api.postio.co.uk/v1", clientId: "plain-test/1",
+  input: "#search", output: { address_line_1: "#search", post_town: "#town", postcode: "#pc", latitude: "#lat" } });
+window.h2 = Postio.AddressFinder.setup({ apiKey: window.KEY, baseUrl: "https://stage-api.postio.co.uk/v1", input: "#s2" });
+</script></body></html>

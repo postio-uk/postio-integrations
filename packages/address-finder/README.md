@@ -52,8 +52,9 @@ finder.destroy();
 |---|---|---|---|
 | `apiKey` | `string` | — | Required. `pk_*` publishable key. |
 | `input` | `string \| HTMLInputElement` | — | Required. The text input the user types into. |
-| `output` | `OutputMap` | — | Required. Map of API field → DOM target to populate. |
+| `output` | `OutputMap` | — | Map of API field → DOM target to populate. Leave it out and nothing is filled in (a console warning says so). |
 | `baseUrl` | `string` | `https://api.postio.co.uk/v1` | Override for self-hosted / staging. |
+| `clientId` | `string` | `postio-core/<version>` | Names your integration in the `x-postio-client` header, e.g. `"my-shop/1.4"`. |
 | `bare` | `boolean` | `false` | Skip the visual CSS layer; ship structural only. |
 | `minLength` | `number` | `2` | Min chars before searching. |
 | `debounceMs` | `number` | `80` | Debounce input by N ms. |
@@ -74,9 +75,14 @@ finder.destroy();
 for the full list.
 
 `output` values can be a CSS selector or an `HTMLElement`. `<input>`,
-`<textarea>` and `<select>` get their `.value` set + `input` and
-`change` events dispatched (so React/Vue/Angular pick up the change).
-Anything else gets `.textContent` set.
+`<textarea>` and `<select>` get their value set through the element's
+native setter, then `input` and `change` events, so controlled React and
+Vue fields take the value into their state. Anything else gets
+`.textContent` set.
+
+The search box can itself be an output (often `address_line_1`): it then
+keeps that field's value after a pick. Otherwise it shows a one-line
+summary. Either way, the widget's own writes never start a new search.
 
 ## Postcode mode
 

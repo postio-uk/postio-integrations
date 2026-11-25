@@ -47,6 +47,11 @@ export interface SetupOptions {
   output?: OutputMap;
   /** Override the API base URL. Default `https://api.postio.co.uk/v1`. */
   baseUrl?: string;
+  /**
+   * Names your integration in the `x-postio-client` header, e.g.
+   * `"my-shop/1.4"`. Default `postio-core/<version>`.
+   */
+  clientId?: string;
   /** Suppress default visual styling. Structural CSS still ships. */
   bare?: boolean;
   /** Min characters before searching. Default `2`. */
@@ -153,6 +158,7 @@ export function setup(options: SetupOptions): FinderHandle {
   const client = new Postio({
     apiKey: options.apiKey,
     ...(options.baseUrl !== undefined ? { baseUrl: options.baseUrl } : {}),
+    ...(options.clientId ? { headers: { "x-postio-client": options.clientId } } : {}),
   });
 
   const listboxId = `postio-af-${++listboxIdCounter}`;
@@ -197,6 +203,8 @@ export function setup(options: SetupOptions): FinderHandle {
   let debounceTimer: ReturnType<typeof setTimeout> | null = null;
   let searchAbort: AbortController | null = null;
   let warmed = false;
+  /** True while we write into the search box ourselves, so the input event that write fires isn't read as typing. */
+  let writing = false;
 
   const positionListbox = () => {
     const rect = input.getBoundingClientRect();
@@ -364,6 +372,7 @@ export function setup(options: SetupOptions): FinderHandle {
   };
 
   const onInputEvent = () => {
+    if (writing) return;
     const q = input.value.trim();
     if (mode === "postcode") {
       postcodeStep(q);
@@ -379,8 +388,17 @@ export function setup(options: SetupOptions): FinderHandle {
   };
 
   const finishPick = (address: Address) => {
-    populateOutputs(outputs, address);
-    input.value = formatPicked(address);
+    // Our own writes fire input events (frameworks need them); none of them
+    // should start a new search on the search box.
+    writing = true;
+    try {
+      populateOutputs(outputs, address);
+      // If the search box is itself a mapped field (often line 1), keep
+      // that value rather than overwriting it with the one-line summary.
+      if (!outputs.some((o) => o.el === input)) setFieldValue(input, formatPicked(address));
+    } finally {
+      writing = false;
+    }
     options.onSelect?.(address);
     results = [];
     records = [];
@@ -520,7 +538,12 @@ export function setup(options: SetupOptions): FinderHandle {
       listbox.remove();
     },
     clear() {
-      input.value = "";
+      writing = true;
+      try {
+        setFieldValue(input, "");
+      } finally {
+        writing = false;
+      }
       results = [];
       records = [];
       status = null;
@@ -538,6 +561,17 @@ function resolveElement(target: string | HTMLElement): HTMLElement | null {
 interface ResolvedOutput {
   field: AddressField;
   el: HTMLElement;
+  /** The caller's selector, re-run at pick time: frameworks such as React re-render and swap field nodes, leaving the setup-time element detached. */
+  selector: string | null;
+}
+
+/** The element to write to now: a fresh match for a selector, else the one found at setup. */
+function currentEl(o: ResolvedOutput): HTMLElement {
+  if (o.selector && !o.el.isConnected) {
+    const fresh = document.querySelector<HTMLElement>(o.selector);
+    if (fresh) o.el = fresh;
+  }
+  return o.el;
 }
 
 function resolveOutputs(map: OutputMap | undefined): ResolvedOutput[] {
@@ -560,13 +594,15 @@ function resolveOutputs(map: OutputMap | undefined): ResolvedOutput[] {
       console.warn(`@postio/address-finder: output target for "${field}" not found`);
       continue;
     }
-    out.push({ field: field as AddressField, el });
+    out.push({ field: field as AddressField, el, selector: typeof target === "string" ? target : null });
   }
   return out;
 }
 
 function populateOutputs(outputs: ResolvedOutput[], address: Address): void {
-  for (const { field, el } of outputs) {
+  for (const o of outputs) {
+    const { field } = o;
+    const el = currentEl(o);
     const value = (address as Record<string, unknown>)[field];
     const stringValue = value == null ? "" : String(value);
     if (
@@ -574,13 +610,35 @@ function populateOutputs(outputs: ResolvedOutput[], address: Address): void {
       el instanceof HTMLTextAreaElement ||
       el instanceof HTMLSelectElement
     ) {
-      el.value = stringValue;
-      el.dispatchEvent(new Event("input", { bubbles: true }));
-      el.dispatchEvent(new Event("change", { bubbles: true }));
+      setFieldValue(el, stringValue);
     } else {
       el.textContent = stringValue;
     }
   }
+}
+
+/**
+ * Write a form field's value so React, Vue and plain forms all see it.
+ * React tracks the last value it saw on each input; a plain `el.value = x`
+ * updates that tracker too, so React treats the following input event as
+ * "no change" and drops it. Calling the prototype's own setter bypasses the
+ * tracker, so the event reads as a real change.
+ */
+function setFieldValue(
+  el: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement,
+  value: string,
+): void {
+  const proto =
+    el instanceof HTMLTextAreaElement
+      ? HTMLTextAreaElement.prototype
+      : el instanceof HTMLSelectElement
+        ? HTMLSelectElement.prototype
+        : HTMLInputElement.prototype;
+  const setter = Object.getOwnPropertyDescriptor(proto, "value")?.set;
+  if (setter) setter.call(el, value);
+  else el.value = value;
+  el.dispatchEvent(new Event("input", { bubbles: true }));
+  el.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
 function formatPicked(address: Address): string {

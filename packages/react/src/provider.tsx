@@ -12,6 +12,7 @@ import { Postio } from "@postio/core";
 interface PostioContextValue {
   client: Postio;
   apiKey: string;
+  baseUrl?: string;
 }
 
 const PostioContext = createContext<PostioContextValue | null>(null);
@@ -46,7 +47,7 @@ export function PostioProvider({
 
   const value = useMemo<PostioContextValue>(() => {
     const ctor = client ?? new Postio({ apiKey, ...(baseUrl ? { baseUrl } : {}) });
-    return { client: ctor, apiKey };
+    return { client: ctor, apiKey, ...(baseUrl ? { baseUrl } : {}) };
   }, [apiKey, baseUrl, client]);
 
   const inner = (

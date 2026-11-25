@@ -18,6 +18,8 @@ export interface AddressFinderProps
   output?: OutputMap;
   /** Override the provider's apiKey for this finder only. */
   apiKey?: string;
+  /** Names your integration in the `x-postio-client` header, e.g. `"my-shop/1.4"`. */
+  clientId?: string;
   /** Suppress the default visual styling. */
   bare?: boolean;
   /** Min characters before search fires. Default `2`. */
@@ -54,6 +56,7 @@ export const AddressFinder = forwardRef<AddressFinderHandle, AddressFinderProps>
     const {
       output,
       apiKey: apiKeyOverride,
+      clientId,
       bare,
       minLength,
       debounceMs,
@@ -83,7 +86,9 @@ export const AddressFinder = forwardRef<AddressFinderHandle, AddressFinderProps>
       const opts: SetupOptions = {
         apiKey: apiKeyOverride ?? ctx.apiKey,
         input: inputRef.current,
+        ...(ctx.baseUrl ? { baseUrl: ctx.baseUrl } : {}),
         output: output ?? {},
+        ...(clientId !== undefined ? { clientId } : {}),
         ...(bare !== undefined ? { bare } : {}),
         ...(minLength !== undefined ? { minLength } : {}),
         ...(debounceMs !== undefined ? { debounceMs } : {}),
@@ -105,6 +110,8 @@ export const AddressFinder = forwardRef<AddressFinderHandle, AddressFinderProps>
     }, [
       apiKeyOverride,
       ctx.apiKey,
+      ctx.baseUrl,
+      clientId,
       output,
       bare,
       minLength,
