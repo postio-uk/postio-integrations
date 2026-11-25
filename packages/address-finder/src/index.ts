@@ -43,8 +43,8 @@ export interface SetupOptions {
   apiKey: string;
   /** The text input the user types into. CSS selector or element. */
   input: string | HTMLInputElement;
-  /** Map of API field → DOM element to populate when the user picks an address. */
-  output: OutputMap;
+  /** Map of API field → DOM element to populate when the user picks an address. Without it nothing is filled in (a console warning says so). */
+  output?: OutputMap;
   /** Override the API base URL. Default `https://api.postio.co.uk/v1`. */
   baseUrl?: string;
   /** Suppress default visual styling. Structural CSS still ships. */
@@ -540,8 +540,17 @@ interface ResolvedOutput {
   el: HTMLElement;
 }
 
-function resolveOutputs(map: OutputMap): ResolvedOutput[] {
+function resolveOutputs(map: OutputMap | undefined): ResolvedOutput[] {
   const out: ResolvedOutput[] = [];
+  if (!map || typeof map !== "object") {
+    // Tolerated so a snippet without `output` doesn't break the page, but
+    // nothing gets filled in, so say so.
+    // eslint-disable-next-line no-console
+    console.warn(
+      "@postio/address-finder: no `output` map given, so picked addresses won't fill any fields.",
+    );
+    return out;
+  }
   for (const [field, target] of Object.entries(map)) {
     if (!target) continue;
     const el = resolveElement(target);
