@@ -22,6 +22,7 @@ const STRUCTURAL_CSS = `
   color: inherit;
   max-height: 320px;
   overflow-y: auto;
+  overscroll-behavior: contain;
   box-sizing: border-box;
   display: none;
 }

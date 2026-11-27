@@ -206,10 +206,31 @@ export function setup(options: SetupOptions): FinderHandle {
   /** True while we write into the search box ourselves, so the input event that write fires isn't read as typing. */
   let writing = false;
 
+  /** True when the input sits inside a position:fixed container (a modal, a drawer). */
+  const inFixedContainer = () => {
+    for (let el: Element | null = input; el && el !== document.body; el = el.parentElement) {
+      if (getComputedStyle(el).position === "fixed") return true;
+    }
+    return false;
+  };
+
   const positionListbox = () => {
     const rect = input.getBoundingClientRect();
-    listbox.style.top = `${rect.bottom + window.scrollY + 2}px`;
-    listbox.style.left = `${rect.left + window.scrollX}px`;
+    if (inFixedContainer()) {
+      // Pin to the viewport so the list doesn't ride the page scroll behind a
+      // modal, and fit it in the space below the input (the page can't be
+      // scrolled to reach a list that runs off a fixed modal).
+      listbox.style.position = "fixed";
+      listbox.style.top = `${rect.bottom + 2}px`;
+      listbox.style.left = `${rect.left}px`;
+      const room = window.innerHeight - rect.bottom - 10;
+      listbox.style.maxHeight = room < 320 ? `${Math.max(room, 120)}px` : "";
+    } else {
+      listbox.style.position = "";
+      listbox.style.maxHeight = "";
+      listbox.style.top = `${rect.bottom + window.scrollY + 2}px`;
+      listbox.style.left = `${rect.left + window.scrollX}px`;
+    }
     listbox.style.width = `${rect.width}px`;
   };
 
@@ -495,7 +516,9 @@ export function setup(options: SetupOptions): FinderHandle {
     }, 120);
   };
 
-  const reposition = () => {
+  const reposition = (e?: Event) => {
+    // The list's own scroll doesn't move the input; skip the layout work.
+    if (e && e.target === listbox) return;
     if (isOpen) positionListbox();
   };
 

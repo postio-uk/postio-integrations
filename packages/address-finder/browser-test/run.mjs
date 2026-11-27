@@ -61,4 +61,26 @@ async function pick(p, sel, text) {
   ok(reqs.length && reqs.every((r) => r.h["x-postio-client"] === "react-test/1"), "react pkg: clientId + stage baseUrl used");
   ok(!logs.some((l) => l.startsWith("pageerror")), "react pkg: no page errors");
   await p.close(); }
+// 4. input inside a fixed, scrolling modal (the dashboard billing form)
+{ const { p, logs } = await page("modal.html");
+  await p.setViewportSize({ width: 1000, height: 700 });
+  await p.click("#m-search"); await p.keyboard.type("high street", { delay: 30 });
+  await p.waitForSelector(".postio-af__listbox[data-open=true] .postio-af__option", { timeout: 8000 });
+  await p.waitForTimeout(500);
+  const geo = () => p.evaluate(() => { const l = document.querySelector(".postio-af__listbox"), i = document.querySelector("#m-search");
+    return { pos: getComputedStyle(l).position, gap: l.getBoundingClientRect().top - i.getBoundingClientRect().bottom, bottom: l.getBoundingClientRect().bottom, vh: innerHeight, st: l.scrollTop, sh: l.scrollHeight, ch: l.clientHeight, y: scrollY }; });
+  const g0 = await geo();
+  ok(g0.pos === "fixed", "modal: list pinned to viewport (" + g0.pos + ")");
+  ok(g0.bottom <= g0.vh, "modal: list fits on screen (" + g0.bottom + " / " + g0.vh + ")");
+  const lb = await p.$(".postio-af__listbox"); const bb = await lb.boundingBox();
+  await p.mouse.move(bb.x + bb.width / 2, bb.y + bb.height / 2);
+  for (let i = 0; i < 25; i++) { await p.mouse.wheel(0, 200); await p.waitForTimeout(20); }
+  await p.waitForTimeout(300); const g1 = await geo();
+  ok(g0.sh <= g0.ch || g1.st > 0, "modal: list scrolls (scrollTop " + g1.st + ", " + g0.sh + "/" + g0.ch + ")");
+  ok(g1.y === 0, "modal: page behind doesn't scroll (scrollY " + g1.y + ")");
+  ok(Math.abs(g1.gap - 2) < 1, "modal: list still under the input (gap " + g1.gap + ")");
+  await p.evaluate(() => { document.querySelector("#modal").scrollTop += 60; }); await p.waitForTimeout(200);
+  const g2 = await geo(); ok(Math.abs(g2.gap - 2) < 1, "modal: list follows the input when the modal scrolls (gap " + g2.gap + ")");
+  ok(!logs.some((l) => l.startsWith("pageerror")), "modal: no page errors");
+  await p.close(); }
 await browser.close(); srv.close(); console.log(fails ? `${fails} FAILED` : "ALL PASS"); process.exit(fails ? 1 : 0);

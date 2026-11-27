@@ -109,6 +109,16 @@ now uses the provider's `baseUrl`.
 HTML, the CDN bundle on a React-controlled form, and `@postio/react`,
 against the stage API). It failed 5 checks on the 1.2.0 bundle.
 
+## Widget 1.3.1 — dropdown inside a modal (2026-11-27)
+
+A customer's list stuttered in the dashboard billing modal: the listbox is
+appended to `<body>` with `position: absolute`, so once it hit the end its
+scroll chained to the page behind the fixed modal, which dragged the list
+and snapped it back. Fix: `overscroll-behavior: contain` on the listbox,
+and when the input has a `position: fixed` ancestor the list goes
+`position: fixed` and caps its height to the room below the input. Covered
+by the `modal:` checks in the browser test (the 1.3.0 bundle fails 3).
+
 ## Public copy — canonical Postio one-liner
 
 Whenever a README, package description, or other public-facing surface
